@@ -3,6 +3,7 @@ import SwiftUI
 struct StoryPlayerView: View {
     @State var viewModel: StoryPlayerViewModel
     @Environment(\.dismiss) private var dismiss
+    @GestureState private var isLongPressing = false
 
     var body: some View {
         ZStack {
@@ -26,10 +27,23 @@ struct StoryPlayerView: View {
                     Spacer()
                     bottomOverlay
                 }
+
+                // Tap zones (left = previous, right = next)
+                HStack(spacing: 0) {
+                    Color.clear
+                        .contentShape(Rectangle())
+                        .onTapGesture { viewModel.previousStory() }
+
+                    Color.clear
+                        .contentShape(Rectangle())
+                        .onTapGesture { viewModel.nextStory() }
+                }
+                .ignoresSafeArea()
             }
         }
         .statusBarHidden()
-        .gesture(combinedGesture)
+        .gesture(dragGesture)
+        .gesture(longPressGesture)
         .onChange(of: isLongPressing) { _, pressing in
             if pressing {
                 viewModel.pauseTimer()
@@ -151,19 +165,10 @@ struct StoryPlayerView: View {
         }
     }
 
-    // MARK: - Gestures
+    // MARK: - Gestures (separated for reliability)
 
-    @GestureState private var isLongPressing = false
-
-    private var combinedGesture: some Gesture {
-        // Long press to pause (uses @GestureState for auto-resume on release)
-        let longPress = LongPressGesture(minimumDuration: 0.2)
-            .updating($isLongPressing) { value, state, _ in
-                state = value
-            }
-
-        // Drag for swipe user / dismiss
-        let drag = DragGesture(minimumDistance: Constants.dragMinDistance)
+    private var dragGesture: some Gesture {
+        DragGesture(minimumDistance: Constants.dragMinDistance)
             .onEnded { value in
                 let horizontal = value.translation.width
                 let vertical = value.translation.height
@@ -178,23 +183,13 @@ struct StoryPlayerView: View {
                     }
                 }
             }
+    }
 
-        // Tap for next/previous
-        let tap = SpatialTapGesture()
-            .onEnded { value in
-                let screenWidth = UIScreen.main.bounds.width
-                if value.location.x > screenWidth * 0.5 {
-                    viewModel.nextStory()
-                } else {
-                    viewModel.previousStory()
-                }
+    private var longPressGesture: some Gesture {
+        LongPressGesture(minimumDuration: 0.2)
+            .updating($isLongPressing) { value, state, _ in
+                state = value
             }
-
-        // Compose: drag and tap are exclusive (drag wins over tap),
-        // long press runs simultaneously to detect pause/resume via @GestureState
-        return drag
-            .exclusively(before: tap)
-            .simultaneously(with: longPress)
     }
 
     // MARK: - Image Processing

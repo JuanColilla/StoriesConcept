@@ -3,7 +3,6 @@ import SwiftUI
 struct StoryListView: View {
     @State var viewModel: StoryListViewModel
     @State private var selectedUserIndex: Int?
-    @State private var showPlayer = false
 
     var body: some View {
         NavigationStack {
@@ -18,10 +17,11 @@ struct StoryListView: View {
                 }
             }
             .navigationTitle("Stories")
-            .fullScreenCover(isPresented: $showPlayer) {
-                if let index = selectedUserIndex {
-                    storyPlayer(initialUserIndex: index)
-                }
+            .fullScreenCover(isPresented: Binding(
+                get: { selectedUserIndex != nil },
+                set: { if !$0 { selectedUserIndex = nil } }
+            )) {
+                storyPlayer(initialUserIndex: selectedUserIndex ?? 0)
             }
         }
         .task {
@@ -45,7 +45,6 @@ struct StoryListView: View {
                     .contentShape(Rectangle())
                     .onTapGesture {
                         selectedUserIndex = index
-                        showPlayer = true
                     }
                     .onAppear {
                         viewModel.loadMoreIfNeeded(currentUser: user)
