@@ -1,0 +1,2780 @@
+{
+  "version": "2.8",
+  "children": [
+    {
+      "type": "frame",
+      "id": "Ytzwq",
+      "x": 0,
+      "y": 0,
+      "name": "Story List Screen",
+      "clip": true,
+      "width": 402,
+      "height": 874,
+      "fill": "$bg-page",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "91Csq",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "EEWO2",
+              "name": "Time",
+              "fill": "$text-primary",
+              "content": "9:41",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "hI7MK",
+              "name": "Right Icons",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "6OOKa",
+                  "name": "signalIcon",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "signal",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "72c5w",
+                  "name": "wifiIcon",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "wifi",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "SZpCg",
+                  "name": "batteryIcon",
+                  "width": 22,
+                  "height": 14,
+                  "iconFontName": "battery-full",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "GUCYv",
+          "name": "Content Wrapper",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            0,
+            20,
+            24,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "QS4OW",
+              "name": "Nav Bar",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "eYHl9",
+                  "name": "Nav Title",
+                  "fill": "$text-primary",
+                  "content": "Stories",
+                  "fontFamily": "Outfit",
+                  "fontSize": 26,
+                  "fontWeight": "600",
+                  "letterSpacing": -0.5
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "RuF6u",
+              "name": "Stories Row",
+              "width": "fill_container",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "sYTzG",
+                  "name": "Story Row - Emma",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    14,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "kg6UR",
+                      "name": "emma_c",
+                      "width": 48,
+                      "height": 48,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "6BBUw",
+                          "x": 0,
+                          "y": 0,
+                          "name": "emmaRing",
+                          "fill": "#00000000",
+                          "width": 48,
+                          "height": 48,
+                          "stroke": {
+                            "thickness": 3,
+                            "fill": "$border-unseen"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "qMfXF",
+                          "x": 4,
+                          "y": 4,
+                          "name": "Emma Avatar",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "andyspidey",
+                            "link": "https://unsplash.com/@andyspidey",
+                            "author": "Andrea Sánchez"
+                          },
+                          "width": 40,
+                          "height": 40,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1629121699638-976764fb4c8c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1Mzk4NDl8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 100
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "OFpcf",
+                      "name": "emmaLabel",
+                      "fill": "$text-primary",
+                      "content": "emma_johnson",
+                      "fontFamily": "Outfit",
+                      "fontSize": 15,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "33A4o",
+                      "name": "sp1",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "1bq1P",
+                      "name": "badge1",
+                      "fill": "$accent-green",
+                      "cornerRadius": "$ds-radius-pill",
+                      "padding": [
+                        4,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "y7PFh",
+                          "name": "bt1",
+                          "fill": "$text-white",
+                          "content": "3",
+                          "fontFamily": "Outfit",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "UmpkM",
+                  "name": "Story Row - Jake",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    14,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "rEPA1",
+                      "name": "jake_c",
+                      "width": 48,
+                      "height": 48,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "O1rWG",
+                          "x": 0,
+                          "y": 0,
+                          "name": "jakeRing",
+                          "fill": "#00000000",
+                          "width": 48,
+                          "height": 48,
+                          "stroke": {
+                            "thickness": 2.5,
+                            "fill": "$border-seen"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "XF39y",
+                          "x": 4,
+                          "y": 4,
+                          "name": "Jake Avatar",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "atsu_tettey",
+                            "link": "https://unsplash.com/@atsu_tettey",
+                            "author": "Stephen Tettey Atsu"
+                          },
+                          "width": 40,
+                          "height": 40,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1772240628400-fc6d6c88c057?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1Mzk4NDl8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 100
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "tWWM9",
+                      "name": "jakeLabel",
+                      "fill": "$text-secondary",
+                      "content": "jake_smith",
+                      "fontFamily": "Outfit",
+                      "fontSize": 15
+                    },
+                    {
+                      "type": "frame",
+                      "id": "SbQnR",
+                      "name": "sp2",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "HGN4A",
+                      "name": "seenTxt1",
+                      "fill": "$text-tertiary",
+                      "content": "Seen",
+                      "fontFamily": "Outfit",
+                      "fontSize": 13
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "gYQc5",
+                  "name": "Story Row - Sofia",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    14,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "8fNpL",
+                      "name": "sofia_c",
+                      "width": 48,
+                      "height": 48,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "vDy5v",
+                          "x": 0,
+                          "y": 0,
+                          "name": "sofiaRing",
+                          "fill": "#00000000",
+                          "width": 48,
+                          "height": 48,
+                          "stroke": {
+                            "thickness": 3,
+                            "fill": "$border-unseen"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "qvAA0",
+                          "x": 4,
+                          "y": 4,
+                          "name": "Sofia Avatar",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "cochinoraw",
+                            "link": "https://unsplash.com/@cochinoraw",
+                            "author": "Julian Schultz"
+                          },
+                          "width": 40,
+                          "height": 40,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1573568257170-3e719af79e56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1Mzk4NTB8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 100
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "ZtSFc",
+                      "name": "sofiaLabel",
+                      "fill": "$text-primary",
+                      "content": "sofia_martinez",
+                      "fontFamily": "Outfit",
+                      "fontSize": 15,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "T8K1x",
+                      "name": "sp3",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "y4b2O",
+                      "name": "badge2",
+                      "fill": "$accent-green",
+                      "cornerRadius": "$ds-radius-pill",
+                      "padding": [
+                        4,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "zOcF1",
+                          "name": "bt2",
+                          "fill": "$text-white",
+                          "content": "5",
+                          "fontFamily": "Outfit",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "jKXxc",
+                  "name": "Story Row - Leo",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    14,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "QYy9N",
+                      "name": "leo_c",
+                      "width": 48,
+                      "height": 48,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "GmvFP",
+                          "x": 0,
+                          "y": 0,
+                          "name": "leoRing",
+                          "fill": "#00000000",
+                          "width": 48,
+                          "height": 48,
+                          "stroke": {
+                            "thickness": 2.5,
+                            "fill": "$border-seen"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "YCQbb",
+                          "x": 4,
+                          "y": 4,
+                          "name": "Leo Avatar",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "zeelool_official",
+                            "link": "https://unsplash.com/@zeelool_official",
+                            "author": "ZEELOOL Glasses"
+                          },
+                          "width": 40,
+                          "height": 40,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1752486268262-6ce6b339a8de?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1Mzk4NTB8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 100
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "womJb",
+                      "name": "leoLabel",
+                      "fill": "$text-secondary",
+                      "content": "leo_chen",
+                      "fontFamily": "Outfit",
+                      "fontSize": 15
+                    },
+                    {
+                      "type": "frame",
+                      "id": "NbMGc",
+                      "name": "sp4",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "WULAe",
+                      "name": "seenTxt2",
+                      "fill": "$text-tertiary",
+                      "content": "Seen",
+                      "fontFamily": "Outfit",
+                      "fontSize": 13
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "86KXN",
+                  "name": "Story Row - Mia",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    14,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "RFr3J",
+                      "name": "mia_c",
+                      "width": 48,
+                      "height": 48,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "Lan0k",
+                          "x": 0,
+                          "y": 0,
+                          "name": "miaRing",
+                          "fill": "#00000000",
+                          "width": 48,
+                          "height": 48,
+                          "stroke": {
+                            "thickness": 3,
+                            "fill": "$border-unseen"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "wewIa",
+                          "x": 4,
+                          "y": 4,
+                          "name": "Mia Avatar",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "itsbrunoagain",
+                            "link": "https://unsplash.com/@itsbrunoagain",
+                            "author": "Bruno Ngarukiye"
+                          },
+                          "width": 40,
+                          "height": 40,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1730715145679-2babdbcb9a5c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1Mzk4NTF8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 100
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "oqEVO",
+                      "name": "miaLabel",
+                      "fill": "$text-primary",
+                      "content": "mia_williams",
+                      "fontFamily": "Outfit",
+                      "fontSize": 15,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "LhM5e",
+                      "name": "sp5",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "BDdBZ",
+                      "name": "badge3",
+                      "fill": "$accent-green",
+                      "cornerRadius": "$ds-radius-pill",
+                      "padding": [
+                        4,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "tZuOO",
+                          "name": "bt3",
+                          "fill": "$text-white",
+                          "content": "2",
+                          "fontFamily": "Outfit",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "0eEHa",
+          "name": "Tab Bar Container",
+          "width": "fill_container",
+          "height": "fit_content(95)",
+          "padding": [
+            12,
+            21,
+            21,
+            21
+          ],
+          "justifyContent": "center",
+          "alignItems": "center"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "l1wSr",
+      "x": 502,
+      "y": 0,
+      "name": "Story View - Not Liked / Unseen",
+      "clip": true,
+      "width": 402,
+      "height": 874,
+      "fill": "$bg-dark",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "rHIVk",
+          "name": "contentWrap",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "z10ab",
+              "name": "progressRow",
+              "width": "fill_container",
+              "gap": 4,
+              "padding": [
+                12,
+                16,
+                8,
+                16
+              ],
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 2,
+                  "id": "X9JnA",
+                  "name": "seg1",
+                  "fill": "$progress-active",
+                  "width": "fill_container",
+                  "height": 3
+                },
+                {
+                  "type": "frame",
+                  "id": "5XBUj",
+                  "name": "seg2",
+                  "clip": true,
+                  "width": "fill_container",
+                  "height": 3,
+                  "fill": "$progress-inactive",
+                  "cornerRadius": 2,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 2,
+                      "id": "tF8ch",
+                      "x": 0,
+                      "y": 0,
+                      "name": "seg2fill",
+                      "fill": "$progress-active",
+                      "width": 54,
+                      "height": 3
+                    }
+                  ]
+                },
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 2,
+                  "id": "tL2GH",
+                  "name": "seg3",
+                  "fill": "$progress-inactive",
+                  "width": "fill_container",
+                  "height": 3
+                },
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 2,
+                  "id": "Fx6xo",
+                  "name": "seg4",
+                  "fill": "$progress-inactive",
+                  "width": "fill_container",
+                  "height": 3
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "tvN1D",
+              "name": "headerRow",
+              "width": "fill_container",
+              "gap": 10,
+              "padding": [
+                12,
+                16,
+                8,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ellipse",
+                  "id": "OEPiL",
+                  "name": "avatar",
+                  "metadata": {
+                    "type": "unsplash",
+                    "username": "anyutakejbalo",
+                    "link": "https://unsplash.com/@anyutakejbalo",
+                    "author": "Anna Keibalo"
+                  },
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "https://images.unsplash.com/photo-1689193502399-b9490ee1c80e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1Mzk4Mzl8&ixlib=rb-4.1.0&q=80&w=1080",
+                    "mode": "fill"
+                  },
+                  "width": 36,
+                  "height": 36
+                },
+                {
+                  "type": "frame",
+                  "id": "ClW3i",
+                  "name": "User Info",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "0ji1I",
+                      "name": "uname2",
+                      "fill": "$text-white",
+                      "content": "jessica_outdoors",
+                      "fontFamily": "Outfit",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "9iawE",
+                      "name": "newTs",
+                      "fill": "$text-white-secondary",
+                      "content": "2h ago",
+                      "fontFamily": "Outfit",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "icon_font",
+                  "id": "pLplL",
+                  "name": "closeBtn",
+                  "width": 24,
+                  "height": 24,
+                  "iconFontName": "x",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-white"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "NLILn",
+              "name": "storyImage",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "./images/generated-1773539853857.png",
+                "mode": "fill"
+              }
+            },
+            {
+              "type": "frame",
+              "id": "lzROM",
+              "name": "bottomRow",
+              "width": "fill_container",
+              "gap": 12,
+              "padding": [
+                12,
+                16,
+                20,
+                16
+              ],
+              "justifyContent": "end",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "PfBTE",
+                  "name": "heartBtn",
+                  "width": 26,
+                  "height": 26,
+                  "iconFontName": "heart",
+                  "iconFontFamily": "lucide",
+                  "fill": "$like-inactive"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "O4gVg",
+      "x": 502,
+      "y": 987,
+      "name": "Story View - Liked / Seen",
+      "clip": true,
+      "width": 402,
+      "height": 874,
+      "fill": "$bg-dark",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "yi7uR",
+          "name": "Progress Bar",
+          "width": "fill_container",
+          "gap": 4,
+          "padding": [
+            12,
+            16,
+            8,
+            16
+          ],
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 2,
+              "id": "dvlPQ",
+              "name": "seg1",
+              "fill": "$progress-active",
+              "width": "fill_container",
+              "height": 3
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 2,
+              "id": "5bFmY",
+              "name": "seg2",
+              "fill": "$progress-active",
+              "width": "fill_container",
+              "height": 3
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 2,
+              "id": "4TJc1",
+              "name": "seg3",
+              "fill": "$progress-active",
+              "width": "fill_container",
+              "height": 3
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 2,
+              "id": "l004J",
+              "name": "seg4",
+              "fill": "$progress-inactive",
+              "width": "fill_container",
+              "height": 3
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "oVb8p",
+          "name": "Story Header",
+          "width": "fill_container",
+          "gap": 10,
+          "padding": [
+            12,
+            16,
+            8,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ellipse",
+              "id": "GLTri",
+              "name": "User Avatar",
+              "metadata": {
+                "type": "unsplash",
+                "username": "thefourthwxll",
+                "link": "https://unsplash.com/@thefourthwxll",
+                "author": "Faustina Okeke"
+              },
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "https://images.unsplash.com/photo-1763192952100-471c888f98db?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1Mzk4MDJ8&ixlib=rb-4.1.0&q=80&w=1080",
+                "mode": "fill"
+              },
+              "width": 36,
+              "height": 36,
+              "stroke": {
+                "thickness": 0
+              }
+            },
+            {
+              "type": "frame",
+              "id": "NrWf1",
+              "name": "User Info",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 2,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "gDrXW",
+                  "name": "Username",
+                  "fill": "$text-white",
+                  "content": "emma.travels",
+                  "fontFamily": "Outfit",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "WuPZj",
+                  "name": "seenRow2",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "QWTps",
+                      "name": "tstamp2",
+                      "fill": "$text-white-secondary",
+                      "content": "5h ago",
+                      "fontFamily": "Outfit",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "icon_font",
+                      "id": "37hRW",
+                      "name": "eyeIcon2",
+                      "width": 12,
+                      "height": 12,
+                      "iconFontName": "eye",
+                      "iconFontFamily": "lucide",
+                      "fill": "$text-white-secondary"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "icon_font",
+              "id": "AZc2D",
+              "name": "Close Button",
+              "width": 24,
+              "height": 24,
+              "iconFontName": "x",
+              "iconFontFamily": "lucide",
+              "fill": "$text-white"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "KZqpw",
+          "name": "Story Content",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1773539801890.png",
+            "mode": "fill"
+          },
+          "layout": "vertical",
+          "padding": 16,
+          "justifyContent": "end"
+        },
+        {
+          "type": "frame",
+          "id": "nnIuh",
+          "name": "Bottom Action Bar",
+          "width": "fill_container",
+          "gap": 12,
+          "padding": [
+            12,
+            16,
+            20,
+            16
+          ],
+          "justifyContent": "end",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "UV2n5",
+              "name": "Like Button",
+              "width": 44,
+              "height": 44,
+              "cornerRadius": "$ds-radius-pill",
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "Guu4A",
+                  "name": "Heart Liked",
+                  "width": 26,
+                  "height": 26,
+                  "iconFontName": "heart",
+                  "iconFontFamily": "lucide",
+                  "fill": "$like-red"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Q4Phn",
+      "x": 0,
+      "y": 987,
+      "name": "Story List - Network Error (Empty)",
+      "clip": true,
+      "width": 402,
+      "height": 874,
+      "fill": "$bg-page",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "3vwBL",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "chJgo",
+              "name": "Time",
+              "fill": "$text-primary",
+              "content": "9:41",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "eCcYs",
+              "name": "Right Icons",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "nicM7",
+                  "name": "signalIcon",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "signal",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "N5uGA",
+                  "name": "wifiIcon",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "wifi",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "gHlC5",
+                  "name": "batteryIcon",
+                  "width": 22,
+                  "height": 14,
+                  "iconFontName": "battery-full",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "n3T1j",
+          "name": "Content Wrapper",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            0,
+            20,
+            24,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "jCsUk",
+              "name": "Nav Bar",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "LumfL",
+                  "name": "Nav Title",
+                  "fill": "$text-primary",
+                  "content": "Stories",
+                  "fontFamily": "Outfit",
+                  "fontSize": 26,
+                  "fontWeight": "600",
+                  "letterSpacing": -0.5
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "VJyzc",
+              "name": "Empty State",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "PoQeb",
+                  "type": "ref",
+                  "ref": "oKneS",
+                  "height": "fill_container",
+                  "width": "fill_container",
+                  "name": "errorRef",
+                  "x": 0,
+                  "y": 0,
+                  "descendants": {
+                    "j1FK0": {
+                      "x": 141,
+                      "y": 199.5
+                    },
+                    "fkemD": {
+                      "iconFontName": "wifi-off"
+                    },
+                    "fkRPJ": {
+                      "x": 118,
+                      "y": 295.5,
+                      "content": "No connection"
+                    },
+                    "kELO0": {
+                      "x": 41,
+                      "y": 336.5,
+                      "content": "Check your internet connection and try again to see the latest stories.",
+                      "width": 280
+                    },
+                    "1vuoY": {
+                      "x": 127.5,
+                      "y": 394.5
+                    },
+                    "46L4Y": {
+                      "content": "Retry"
+                    },
+                    "OgvS3": {
+                      "x": 116.5,
+                      "y": 437.5,
+                      "enabled": false
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "U6lFz",
+          "name": "Tab Bar Container",
+          "width": "fill_container",
+          "height": "fit_content(95)",
+          "padding": [
+            12,
+            21,
+            21,
+            21
+          ],
+          "justifyContent": "center",
+          "alignItems": "center"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "UDxVS",
+      "x": 0,
+      "y": 1964,
+      "name": "Story List - Network Error (Cached)",
+      "clip": true,
+      "width": 402,
+      "height": 874,
+      "fill": "$bg-page",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "nEUBQ",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "vc85K",
+              "name": "Time",
+              "fill": "$text-primary",
+              "content": "9:41",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "fALew",
+              "name": "Right Icons",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "N91RH",
+                  "name": "signalIcon",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "signal",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "zk5bm",
+                  "name": "wifiIcon",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "wifi",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "TZQKd",
+                  "name": "batteryIcon",
+                  "width": 22,
+                  "height": 14,
+                  "iconFontName": "battery-full",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ZiyE5",
+          "name": "Content Wrapper",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            0,
+            20,
+            24,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "3UKta",
+              "name": "Nav Bar",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "H0Ho2",
+                  "name": "Nav Title",
+                  "fill": "$text-primary",
+                  "content": "Stories",
+                  "fontFamily": "Outfit",
+                  "fontSize": 26,
+                  "fontWeight": "600",
+                  "letterSpacing": -0.5
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ys21H",
+              "name": "Error Banner",
+              "width": "fill_container",
+              "fill": "$accent-red",
+              "cornerRadius": "$ds-radius-md",
+              "gap": 10,
+              "padding": [
+                12,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "UqFW3",
+                  "name": "bannerIcon",
+                  "width": 18,
+                  "height": 18,
+                  "iconFontName": "wifi-off",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-white"
+                },
+                {
+                  "type": "frame",
+                  "id": "XOJmx",
+                  "name": "Banner Text Wrap",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "eMdXr",
+                      "name": "bannerTitle",
+                      "fill": "$text-white",
+                      "content": "No connection",
+                      "fontFamily": "Outfit",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "fqvxs",
+                      "name": "bannerSub",
+                      "fill": "$text-white-secondary",
+                      "content": "Showing cached stories. Pull to refresh.",
+                      "fontFamily": "Outfit",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "icon_font",
+                  "id": "LwFF5",
+                  "name": "bannerClose",
+                  "width": 18,
+                  "height": 18,
+                  "iconFontName": "x",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-white-secondary"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "lBR6c",
+              "name": "Stories Row",
+              "width": "fill_container",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ySVfJ",
+                  "name": "Story Row - Emma",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    14,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "2xQzD",
+                      "name": "emma_c",
+                      "width": 48,
+                      "height": 48,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "cy1d1",
+                          "x": 0,
+                          "y": 0,
+                          "name": "emmaRing",
+                          "fill": "#00000000",
+                          "width": 48,
+                          "height": 48,
+                          "stroke": {
+                            "thickness": 3,
+                            "fill": "$border-unseen"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Whfj3",
+                          "x": 4,
+                          "y": 4,
+                          "name": "Emma Avatar",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "andyspidey",
+                            "link": "https://unsplash.com/@andyspidey",
+                            "author": "Andrea Sánchez"
+                          },
+                          "width": 40,
+                          "height": 40,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1629121699638-976764fb4c8c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1Mzk4NDl8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 100
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "554CE",
+                      "name": "emmaLabel",
+                      "fill": "$text-primary",
+                      "content": "emma_johnson",
+                      "fontFamily": "Outfit",
+                      "fontSize": 15,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "PCf4h",
+                      "name": "sp1",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "VlksR",
+                      "name": "badge1",
+                      "fill": "$text-tertiary",
+                      "cornerRadius": "$ds-radius-pill",
+                      "padding": [
+                        4,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "F5sfb",
+                          "name": "bt1",
+                          "fill": "$text-white",
+                          "content": "3",
+                          "fontFamily": "Outfit",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "WDjvJ",
+                  "name": "Story Row - Jake",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    14,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "teFJd",
+                      "name": "jake_c",
+                      "width": 48,
+                      "height": 48,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "82Ees",
+                          "x": 0,
+                          "y": 0,
+                          "name": "jakeRing",
+                          "fill": "#00000000",
+                          "width": 48,
+                          "height": 48,
+                          "stroke": {
+                            "thickness": 2.5,
+                            "fill": "$border-seen"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "9BxvK",
+                          "x": 4,
+                          "y": 4,
+                          "name": "Jake Avatar",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "atsu_tettey",
+                            "link": "https://unsplash.com/@atsu_tettey",
+                            "author": "Stephen Tettey Atsu"
+                          },
+                          "width": 40,
+                          "height": 40,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1772240628400-fc6d6c88c057?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1Mzk4NDl8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 100
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "69nIP",
+                      "name": "jakeLabel",
+                      "fill": "$text-secondary",
+                      "content": "jake_smith",
+                      "fontFamily": "Outfit",
+                      "fontSize": 15
+                    },
+                    {
+                      "type": "frame",
+                      "id": "9QYiw",
+                      "name": "sp2",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "eVKWf",
+                      "name": "seenTxt1",
+                      "fill": "$text-tertiary",
+                      "content": "Seen",
+                      "fontFamily": "Outfit",
+                      "fontSize": 13
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vacpZ",
+                  "name": "Story Row - Sofia",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    14,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "tRG2I",
+                      "name": "sofia_c",
+                      "width": 48,
+                      "height": 48,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "47O03",
+                          "x": 0,
+                          "y": 0,
+                          "name": "sofiaRing",
+                          "fill": "#00000000",
+                          "width": 48,
+                          "height": 48,
+                          "stroke": {
+                            "thickness": 3,
+                            "fill": "$border-unseen"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "2alA6",
+                          "x": 4,
+                          "y": 4,
+                          "name": "Sofia Avatar",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "cochinoraw",
+                            "link": "https://unsplash.com/@cochinoraw",
+                            "author": "Julian Schultz"
+                          },
+                          "width": 40,
+                          "height": 40,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1573568257170-3e719af79e56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1Mzk4NTB8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 100
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "CTUjv",
+                      "name": "sofiaLabel",
+                      "fill": "$text-primary",
+                      "content": "sofia_martinez",
+                      "fontFamily": "Outfit",
+                      "fontSize": 15,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "I6hSh",
+                      "name": "sp3",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "B2HVu",
+                      "name": "badge2",
+                      "fill": "$text-tertiary",
+                      "cornerRadius": "$ds-radius-pill",
+                      "padding": [
+                        4,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "U1CCm",
+                          "name": "bt2",
+                          "fill": "$text-white",
+                          "content": "5",
+                          "fontFamily": "Outfit",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "nKGEp",
+                  "name": "Story Row - Leo",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    14,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "qJxk1",
+                      "name": "leo_c",
+                      "width": 48,
+                      "height": 48,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "23OQl",
+                          "x": 0,
+                          "y": 0,
+                          "name": "leoRing",
+                          "fill": "#00000000",
+                          "width": 48,
+                          "height": 48,
+                          "stroke": {
+                            "thickness": 2.5,
+                            "fill": "$border-seen"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "u5aLs",
+                          "x": 4,
+                          "y": 4,
+                          "name": "Leo Avatar",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "zeelool_official",
+                            "link": "https://unsplash.com/@zeelool_official",
+                            "author": "ZEELOOL Glasses"
+                          },
+                          "width": 40,
+                          "height": 40,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1752486268262-6ce6b339a8de?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1Mzk4NTB8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 100
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "Afa8W",
+                      "name": "leoLabel",
+                      "fill": "$text-secondary",
+                      "content": "leo_chen",
+                      "fontFamily": "Outfit",
+                      "fontSize": 15
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wanPI",
+                      "name": "sp4",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "kA67o",
+                      "name": "seenTxt2",
+                      "fill": "$text-tertiary",
+                      "content": "Seen",
+                      "fontFamily": "Outfit",
+                      "fontSize": 13
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "iNCta",
+                  "name": "Story Row - Mia",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    14,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "CYTFo",
+                      "name": "mia_c",
+                      "width": 48,
+                      "height": 48,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "tH1IK",
+                          "x": 0,
+                          "y": 0,
+                          "name": "miaRing",
+                          "fill": "#00000000",
+                          "width": 48,
+                          "height": 48,
+                          "stroke": {
+                            "thickness": 3,
+                            "fill": "$border-unseen"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "GHtc0",
+                          "x": 4,
+                          "y": 4,
+                          "name": "Mia Avatar",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "itsbrunoagain",
+                            "link": "https://unsplash.com/@itsbrunoagain",
+                            "author": "Bruno Ngarukiye"
+                          },
+                          "width": 40,
+                          "height": 40,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1730715145679-2babdbcb9a5c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzM1Mzk4NTF8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 100
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "R8xdY",
+                      "name": "miaLabel",
+                      "fill": "$text-primary",
+                      "content": "mia_williams",
+                      "fontFamily": "Outfit",
+                      "fontSize": 15,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "HxSYz",
+                      "name": "sp5",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "U8NtF",
+                      "name": "badge3",
+                      "fill": "$text-tertiary",
+                      "cornerRadius": "$ds-radius-pill",
+                      "padding": [
+                        4,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "xbbTB",
+                          "name": "bt3",
+                          "fill": "$text-white",
+                          "content": "2",
+                          "fontFamily": "Outfit",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "NJ7ge",
+          "name": "Tab Bar Container",
+          "width": "fill_container",
+          "height": "fit_content(95)",
+          "padding": [
+            12,
+            21,
+            21,
+            21
+          ],
+          "justifyContent": "center",
+          "alignItems": "center"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "yf9i4",
+      "x": 1004,
+      "y": 0,
+      "name": "Design System",
+      "width": 860,
+      "fill": "#FFFFFF",
+      "layout": "vertical",
+      "gap": 40,
+      "padding": 40,
+      "children": [
+        {
+          "type": "text",
+          "id": "NJlNJ",
+          "name": "titleText",
+          "fill": "$ds-accent",
+          "content": "Design System — Concept Stories",
+          "fontFamily": "Outfit",
+          "fontSize": 32,
+          "fontWeight": "700",
+          "letterSpacing": -0.5
+        },
+        {
+          "type": "text",
+          "id": "OQYoM",
+          "name": "subtitleText",
+          "fill": "$text-secondary",
+          "content": "Color palette, semantic tokens & reusable components",
+          "fontFamily": "Outfit",
+          "fontSize": 16,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "rectangle",
+          "id": "TChmk",
+          "name": "divider1",
+          "fill": "$border-subtle",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "text",
+          "id": "tk8w2",
+          "name": "colorSectionTitle",
+          "fill": "$ds-accent",
+          "content": "Color Palette",
+          "fontFamily": "Outfit",
+          "fontSize": 22,
+          "fontWeight": "600",
+          "letterSpacing": -0.3
+        },
+        {
+          "type": "frame",
+          "id": "BSPri",
+          "name": "Accent Colors",
+          "width": "fill_container",
+          "gap": 16,
+          "children": [
+            {
+              "type": "frame",
+              "id": "atGqc",
+              "name": "accentSwatch1",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": "$ds-radius-md",
+                  "id": "Bh88q",
+                  "name": "accentBox1",
+                  "fill": "$ds-accent",
+                  "width": "fill_container",
+                  "height": 64
+                },
+                {
+                  "type": "text",
+                  "id": "gxdhX",
+                  "name": "accentLabel1",
+                  "fill": "$text-primary",
+                  "content": "Accent Primary",
+                  "fontFamily": "Outfit",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "O0rG6",
+                  "name": "accentHex1",
+                  "fill": "$text-secondary",
+                  "content": "#1A1918",
+                  "fontFamily": "Outfit",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "QocSz",
+              "name": "accentSwatch2",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": "$ds-radius-md",
+                  "id": "9LnqN",
+                  "name": "accentBox2",
+                  "fill": "$ds-accent-secondary",
+                  "width": "fill_container",
+                  "height": 64
+                },
+                {
+                  "type": "text",
+                  "id": "W2Bq1",
+                  "name": "accentLabel2",
+                  "fill": "$text-primary",
+                  "content": "Accent Secondary",
+                  "fontFamily": "Outfit",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "DqaGF",
+                  "name": "accentHex2",
+                  "fill": "$text-secondary",
+                  "content": "#3D8A5A",
+                  "fontFamily": "Outfit",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "g2Pfd",
+              "name": "accentSwatch3",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": "$ds-radius-md",
+                  "id": "ggzmC",
+                  "name": "accentBox3",
+                  "fill": "$bg-page",
+                  "width": "fill_container",
+                  "height": 64,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "$border-subtle"
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "4Q9ug",
+                  "name": "accentLabel3",
+                  "fill": "$text-primary",
+                  "content": "Background",
+                  "fontFamily": "Outfit",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "JPQIX",
+                  "name": "accentHex3",
+                  "fill": "$text-secondary",
+                  "content": "#F5F4F1",
+                  "fontFamily": "Outfit",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Wp86S",
+              "name": "accentSwatch4",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": "$ds-radius-md",
+                  "id": "DwE0T",
+                  "name": "accentBox4",
+                  "fill": "$bg-card",
+                  "width": "fill_container",
+                  "height": 64,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "$border-subtle"
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "iRPGD",
+                  "name": "accentLabel4",
+                  "fill": "$text-primary",
+                  "content": "Card / Surface",
+                  "fontFamily": "Outfit",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "sr3B7",
+                  "name": "accentHex4",
+                  "fill": "$text-secondary",
+                  "content": "#FFFFFF",
+                  "fontFamily": "Outfit",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "UgNoF",
+          "name": "semanticTitle",
+          "fill": "$ds-accent",
+          "content": "Semantic Colors",
+          "fontFamily": "Outfit",
+          "fontSize": 18,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "8lQZl",
+          "name": "Semantic Colors Row",
+          "width": "fill_container",
+          "gap": 16,
+          "children": [
+            {
+              "type": "frame",
+              "id": "LACBW",
+              "name": "successSwatch",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "VlQPE",
+                  "name": "successBox",
+                  "width": "fill_container",
+                  "height": 64,
+                  "fill": "$ds-success-bg",
+                  "cornerRadius": "$ds-radius-md",
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 2,
+                    "fill": "$ds-success"
+                  },
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 14,
+                      "id": "okmjF",
+                      "name": "successInner",
+                      "fill": "$ds-success",
+                      "width": 28,
+                      "height": 28
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "sMAKs",
+                  "name": "successLabel",
+                  "fill": "$ds-success-text",
+                  "content": "Success",
+                  "fontFamily": "Outfit",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "Ilt0Y",
+                  "name": "successHex",
+                  "fill": "$text-secondary",
+                  "content": "#34C759",
+                  "fontFamily": "Outfit",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "PsQ7L",
+              "name": "errorSwatch",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Xg49M",
+                  "name": "errorBox",
+                  "width": "fill_container",
+                  "height": 64,
+                  "fill": "$ds-error-bg",
+                  "cornerRadius": "$ds-radius-md",
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 2,
+                    "fill": "$ds-error"
+                  },
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 14,
+                      "id": "mDOVp",
+                      "name": "errorInner",
+                      "fill": "$ds-error",
+                      "width": 28,
+                      "height": 28
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "kY8Ft",
+                  "name": "errorLabel",
+                  "fill": "$ds-error-text",
+                  "content": "Error",
+                  "fontFamily": "Outfit",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "YWA0q",
+                  "name": "errorHex",
+                  "fill": "$text-secondary",
+                  "content": "#FF3B30",
+                  "fontFamily": "Outfit",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ASYl7",
+              "name": "warnSwatch",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Njqvv",
+                  "name": "warnBox",
+                  "width": "fill_container",
+                  "height": 64,
+                  "fill": "$ds-warning-bg",
+                  "cornerRadius": "$ds-radius-md",
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 2,
+                    "fill": "$ds-warning"
+                  },
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 14,
+                      "id": "laVYC",
+                      "name": "warnInner",
+                      "fill": "$ds-warning",
+                      "width": 28,
+                      "height": 28
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "Ee5Vn",
+                  "name": "warnLabel",
+                  "fill": "$ds-warning-text",
+                  "content": "Warning",
+                  "fontFamily": "Outfit",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "cq2Zp",
+                  "name": "warnHex",
+                  "fill": "$text-secondary",
+                  "content": "#FF9500",
+                  "fontFamily": "Outfit",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "pAfA9",
+              "name": "infoSwatch",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "GT28Y",
+                  "name": "infoBox",
+                  "width": "fill_container",
+                  "height": 64,
+                  "fill": "$ds-info-bg",
+                  "cornerRadius": "$ds-radius-md",
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 2,
+                    "fill": "$ds-info"
+                  },
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 14,
+                      "id": "SON03",
+                      "name": "infoInner",
+                      "fill": "$ds-info",
+                      "width": 28,
+                      "height": 28
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "sEI3n",
+                  "name": "infoLabel",
+                  "fill": "$ds-info-text",
+                  "content": "Info",
+                  "fontFamily": "Outfit",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "QSqS8",
+                  "name": "infoHex",
+                  "fill": "$text-secondary",
+                  "content": "#007AFF",
+                  "fontFamily": "Outfit",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "ryPrM",
+          "name": "divider2",
+          "fill": "$border-subtle",
+          "width": "fill_container",
+          "height": 1
+        },
+        {
+          "type": "text",
+          "id": "bLJPn",
+          "name": "compTitle",
+          "fill": "$ds-accent",
+          "content": "Components",
+          "fontFamily": "Outfit",
+          "fontSize": 22,
+          "fontWeight": "600",
+          "letterSpacing": -0.3
+        },
+        {
+          "type": "frame",
+          "id": "Kl2jW",
+          "name": "component/Loading Spinner",
+          "reusable": true,
+          "width": "fill_container",
+          "fill": "$bg-page",
+          "cornerRadius": "$ds-radius-lg",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": 32,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "hdX74",
+              "name": "spinnerLabel",
+              "fill": "$text-secondary",
+              "content": "Loading Spinner",
+              "fontFamily": "Outfit",
+              "fontSize": 14,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "Y3pla",
+              "name": "Spinner Container",
+              "width": 48,
+              "height": 48,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "ellipse",
+                  "id": "m2qbB",
+                  "x": 0,
+                  "y": 0,
+                  "name": "spinnerTrack",
+                  "innerRadius": 0.83,
+                  "width": 48,
+                  "height": 48,
+                  "stroke": {
+                    "align": "center",
+                    "thickness": 4,
+                    "fill": "$ds-spinner-track"
+                  }
+                },
+                {
+                  "type": "ellipse",
+                  "id": "Ui01h",
+                  "x": 0,
+                  "y": 0,
+                  "name": "spinnerArc",
+                  "innerRadius": 0.83,
+                  "sweepAngle": 100,
+                  "width": 48,
+                  "height": 48,
+                  "stroke": {
+                    "align": "center",
+                    "thickness": 4,
+                    "cap": "round",
+                    "fill": "$ds-spinner-fill"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "1UsG6",
+              "name": "spinnerText",
+              "fill": "$text-secondary",
+              "content": "Loading stories...",
+              "fontFamily": "Outfit",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "oKneS",
+          "name": "component/Load Error",
+          "reusable": true,
+          "width": "fill_container",
+          "fill": "$bg-page",
+          "cornerRadius": "$ds-radius-lg",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": 32,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "j1FK0",
+              "name": "Error Icon Circle",
+              "width": 80,
+              "height": 80,
+              "fill": "$ds-error-bg",
+              "cornerRadius": 40,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "fkemD",
+                  "x": 22,
+                  "y": 22,
+                  "name": "errorIcon",
+                  "width": 36,
+                  "height": 36,
+                  "iconFontName": "triangle-alert",
+                  "iconFontFamily": "lucide",
+                  "fill": "$ds-error"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "fkRPJ",
+              "name": "errorTitle",
+              "fill": "$text-primary",
+              "content": "Something went wrong",
+              "fontFamily": "Outfit",
+              "fontSize": 20,
+              "fontWeight": "600",
+              "letterSpacing": -0.3
+            },
+            {
+              "type": "text",
+              "id": "kELO0",
+              "name": "errorDesc",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": 300,
+              "content": "We couldn't load the stories. This might be a temporary issue — please try again.",
+              "lineHeight": 1.5,
+              "textAlign": "center",
+              "fontFamily": "Outfit",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "1vuoY",
+              "name": "Error Actions",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "PYzxx",
+                  "name": "Retry Button",
+                  "fill": "$ds-accent-secondary",
+                  "cornerRadius": "$ds-radius-pill",
+                  "gap": 8,
+                  "padding": [
+                    12,
+                    24
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "1YwoX",
+                      "name": "retryIcon",
+                      "width": 16,
+                      "height": 16,
+                      "iconFontName": "refresh-cw",
+                      "iconFontFamily": "lucide",
+                      "fill": "$text-white"
+                    },
+                    {
+                      "type": "text",
+                      "id": "46L4Y",
+                      "name": "retryLabel",
+                      "fill": "$text-white",
+                      "content": "Try Again",
+                      "fontFamily": "Outfit",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "OgvS3",
+              "name": "errorCodeLabel",
+              "fill": "$text-tertiary",
+              "content": "Error code: LOAD_FAILED",
+              "fontFamily": "Outfit",
+              "fontSize": 11,
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "accent-coral": {
+      "type": "color",
+      "value": "#D89575"
+    },
+    "accent-green": {
+      "type": "color",
+      "value": "#3D8A5A"
+    },
+    "accent-red": {
+      "type": "color",
+      "value": "#D08068"
+    },
+    "bg-card": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "bg-dark": {
+      "type": "color",
+      "value": "#1A1918"
+    },
+    "bg-dark-overlay": {
+      "type": "color",
+      "value": "#00000099"
+    },
+    "bg-page": {
+      "type": "color",
+      "value": "#F5F4F1"
+    },
+    "border-seen": {
+      "type": "color",
+      "value": "#D1D0CD"
+    },
+    "border-strong": {
+      "type": "color",
+      "value": "#D1D0CD"
+    },
+    "border-subtle": {
+      "type": "color",
+      "value": "#E5E4E1"
+    },
+    "border-unseen": {
+      "type": "color",
+      "value": "#3D8A5A"
+    },
+    "like-inactive": {
+      "type": "color",
+      "value": "#FFFFFFCC"
+    },
+    "like-red": {
+      "type": "color",
+      "value": "#FF3B5C"
+    },
+    "progress-active": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "progress-inactive": {
+      "type": "color",
+      "value": "#FFFFFF4D"
+    },
+    "tab-inactive": {
+      "type": "color",
+      "value": "#A8A7A5"
+    },
+    "text-primary": {
+      "type": "color",
+      "value": "#1A1918"
+    },
+    "text-secondary": {
+      "type": "color",
+      "value": "#6D6C6A"
+    },
+    "text-tertiary": {
+      "type": "color",
+      "value": "#9C9B99"
+    },
+    "text-white": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "text-white-secondary": {
+      "type": "color",
+      "value": "#FFFFFFB3"
+    },
+    "ds-accent": {
+      "type": "color",
+      "value": "#1A1918"
+    },
+    "ds-accent-secondary": {
+      "type": "color",
+      "value": "#3D8A5A"
+    },
+    "ds-error": {
+      "type": "color",
+      "value": "#FF3B30"
+    },
+    "ds-error-bg": {
+      "type": "color",
+      "value": "#FDECEA"
+    },
+    "ds-error-text": {
+      "type": "color",
+      "value": "#C62828"
+    },
+    "ds-info": {
+      "type": "color",
+      "value": "#007AFF"
+    },
+    "ds-info-bg": {
+      "type": "color",
+      "value": "#E5F1FF"
+    },
+    "ds-info-text": {
+      "type": "color",
+      "value": "#0055B3"
+    },
+    "ds-radius-lg": {
+      "type": "number",
+      "value": 16
+    },
+    "ds-radius-md": {
+      "type": "number",
+      "value": 12
+    },
+    "ds-radius-pill": {
+      "type": "number",
+      "value": 100
+    },
+    "ds-radius-sm": {
+      "type": "number",
+      "value": 8
+    },
+    "ds-spacing-lg": {
+      "type": "number",
+      "value": 24
+    },
+    "ds-spacing-md": {
+      "type": "number",
+      "value": 16
+    },
+    "ds-spacing-sm": {
+      "type": "number",
+      "value": 8
+    },
+    "ds-spacing-xl": {
+      "type": "number",
+      "value": 32
+    },
+    "ds-spacing-xs": {
+      "type": "number",
+      "value": 4
+    },
+    "ds-spinner-fill": {
+      "type": "color",
+      "value": "#3D8A5A"
+    },
+    "ds-spinner-track": {
+      "type": "color",
+      "value": "#E5E4E1"
+    },
+    "ds-success": {
+      "type": "color",
+      "value": "#34C759"
+    },
+    "ds-success-bg": {
+      "type": "color",
+      "value": "#E8F8ED"
+    },
+    "ds-success-text": {
+      "type": "color",
+      "value": "#1B7A34"
+    },
+    "ds-warning": {
+      "type": "color",
+      "value": "#FF9500"
+    },
+    "ds-warning-bg": {
+      "type": "color",
+      "value": "#FFF4E5"
+    },
+    "ds-warning-text": {
+      "type": "color",
+      "value": "#B36B00"
+    }
+  }
+}
