@@ -9,36 +9,38 @@ struct StoryProgressBar: View {
     var body: some View {
         HStack(spacing: 2) {
             ForEach(0..<totalSegments, id: \.self) { index in
-                GeometryReader { geo in
-                    let width = geo.size.width
-
-                    ZStack(alignment: .leading) {
-                        // Background — brighter if previously seen, dimmer if unseen
-                        RoundedRectangle(cornerRadius: 1.5)
-                            .fill(Color.white.opacity(backgroundOpacity(for: index)))
-
-                        // Fill
-                        RoundedRectangle(cornerRadius: 1.5)
-                            .fill(Color.white)
-                            .frame(width: fillWidth(for: index, totalWidth: width))
-                    }
-                }
-                .frame(height: 3)
+                SegmentView(fillFraction: fillFraction(for: index))
             }
         }
+        .frame(height: 3)
     }
 
-    private func fillWidth(for index: Int, totalWidth: CGFloat) -> CGFloat {
+    private func fillFraction(for index: Int) -> Double {
         if index < activeIndex {
-            return totalWidth // Past segments: fully filled
+            return 1.0
         } else if index == activeIndex {
-            return totalWidth * activeProgress // Active: progressive fill
+            return activeProgress
         } else {
-            return 0 // Future segments: always empty, regardless of seen state
+            return 0
         }
     }
+}
 
-    private func backgroundOpacity(for index: Int) -> Double {
-        0.3 // Uniform background for all segments
+// MARK: - Single Segment (no GeometryReader)
+
+private struct SegmentView: View {
+    let fillFraction: Double
+
+    var body: some View {
+        RoundedRectangle(cornerRadius: 1.5)
+            .fill(Color.white.opacity(0.3))
+            .overlay(alignment: .leading) {
+                GeometryReader { geo in
+                    RoundedRectangle(cornerRadius: 1.5)
+                        .fill(Color.white)
+                        .frame(width: geo.size.width * fillFraction)
+                }
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 1.5))
     }
 }
