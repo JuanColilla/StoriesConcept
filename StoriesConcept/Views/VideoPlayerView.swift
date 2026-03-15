@@ -1,5 +1,6 @@
 import SwiftUI
 import AVKit
+import AVFoundation
 
 struct VideoPlayerView: UIViewControllerRepresentable {
     let url: URL
@@ -16,6 +17,11 @@ struct VideoPlayerView: UIViewControllerRepresentable {
         let controller = AVPlayerViewController()
         controller.showsPlaybackControls = false
         controller.videoGravity = .resizeAspectFill
+
+        // Activate audio session so video sound plays through the speaker,
+        // even when the silent switch is on (matches Instagram Stories behavior).
+        try? AVAudioSession.sharedInstance().setCategory(.playback)
+        try? AVAudioSession.sharedInstance().setActive(true)
 
         let player = AVPlayer(url: url)
         controller.player = player
