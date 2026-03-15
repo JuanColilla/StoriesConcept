@@ -12,6 +12,7 @@ final class StoryListViewModel {
     let cacheService: CacheService
     let persistenceService: PersistenceService
     let prefetchService: PrefetchService
+    let networkMonitor: NetworkMonitor
 
     private var currentBlockIndex = -1
     private var isLoadingMore = false
@@ -25,12 +26,14 @@ final class StoryListViewModel {
         pexelsService: PexelsService,
         cacheService: CacheService,
         persistenceService: PersistenceService,
-        prefetchService: PrefetchService
+        prefetchService: PrefetchService,
+        networkMonitor: NetworkMonitor
     ) {
         self.pexelsService = pexelsService
         self.cacheService = cacheService
         self.persistenceService = persistenceService
         self.prefetchService = prefetchService
+        self.networkMonitor = networkMonitor
     }
 
     // MARK: - Public
@@ -111,6 +114,28 @@ final class StoryListViewModel {
 
     func retry() async {
         await loadInitial()
+    }
+
+    /// Pull-to-refresh: fetches fresh content from the API and generates
+    /// a new block of users, prepended to the list so they appear at the top.
+    func refresh() async {
+        guard networkMonitor.isConnected else { return }
+
+        do {
+            try await fetchContentPool(page: Int.random(in: 1...2))
+            if avatarPool.isEmpty { try await fetchAvatars() }
+        } catch {
+            return
+        }
+
+        let nextBlock = currentBlockIndex + 1
+        let previousCount = users.count
+        generateBlock(index: nextBlock)
+
+        // Move newly appended users to the top so they're visible immediately
+        let newUsers = Array(users[previousCount...])
+        users.removeSubrange(previousCount...)
+        users.insert(contentsOf: newUsers, at: 0)
     }
 
     func unseenCount(for user: User) -> Int {

@@ -47,4 +47,3 @@ fastlane/test_output
 
 # Debug artifacts
 *.memgraph
-images/

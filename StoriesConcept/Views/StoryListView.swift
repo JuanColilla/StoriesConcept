@@ -16,7 +16,28 @@ struct StoryListView: View {
                     userList
                 }
             }
+            .safeAreaInset(edge: .bottom) {
+                // Offline banner — visible regardless of cached data
+                if !viewModel.networkMonitor.isConnected {
+                    HStack(spacing: 8) {
+                        Image(systemName: "wifi.slash")
+                            .font(.subheadline)
+                        Text("No connection")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                    }
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(Color.red.opacity(0.85))
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .animation(.easeInOut(duration: 0.3), value: viewModel.networkMonitor.isConnected)
+                }
+            }
             .navigationTitle("Stories")
+            .refreshable {
+                await viewModel.refresh()
+            }
             .fullScreenCover(isPresented: Binding(
                 get: { selectedUserIndex != nil },
                 set: { if !$0 { selectedUserIndex = nil } }

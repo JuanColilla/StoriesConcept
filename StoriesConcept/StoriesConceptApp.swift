@@ -37,11 +37,14 @@ struct StoriesConceptApp: App {
                             pexelsService: pexelsService,
                             cacheService: cacheService
                         )
+                        let networkMonitor = NetworkMonitor()
+                        networkMonitor.start()
                         viewModel = StoryListViewModel(
                             pexelsService: pexelsService,
                             cacheService: cacheService,
                             persistenceService: persistenceService,
-                            prefetchService: prefetchService
+                            prefetchService: prefetchService,
+                            networkMonitor: networkMonitor
                         )
                     }
             }
