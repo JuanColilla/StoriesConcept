@@ -48,6 +48,18 @@ struct StoryListView: View {
         .task {
             await viewModel.loadInitial()
         }
+        .onChange(of: viewModel.networkMonitor.isConnected) { _, isConnected in
+            guard isConnected else { return }
+            // Connectivity restored — retry initial load if it failed,
+            // or re-trigger thumbnail prefetch for visible users.
+            Task {
+                if viewModel.users.isEmpty {
+                    await viewModel.retry()
+                } else {
+                    viewModel.requestThumbnailPrefetch(for: viewModel.users)
+                }
+            }
+        }
     }
 
     // MARK: - Subviews
