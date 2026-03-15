@@ -21,14 +21,7 @@ struct StoryPlayerView: View {
                         .scaleEffect(1.5)
                 }
 
-                // UI overlay
-                VStack(spacing: 0) {
-                    topOverlay
-                    Spacer()
-                    bottomOverlay
-                }
-
-                // Tap zones (left = previous, right = next)
+                // Tap zones (left = previous, right = next) — BELOW UI overlay
                 HStack(spacing: 0) {
                     Color.clear
                         .contentShape(Rectangle())
@@ -39,6 +32,13 @@ struct StoryPlayerView: View {
                         .onTapGesture { viewModel.nextStory() }
                 }
                 .ignoresSafeArea()
+
+                // UI overlay — ON TOP of tap zones so buttons are tappable
+                VStack(spacing: 0) {
+                    topOverlay
+                    Spacer()
+                    bottomOverlay
+                }
             }
         }
         .statusBarHidden()
@@ -143,6 +143,14 @@ struct StoryPlayerView: View {
             }
             .padding(.horizontal, 12)
         }
+        .padding(.bottom, 12)
+        .background(
+            LinearGradient(
+                colors: [.black.opacity(0.6), .black.opacity(0.0)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
     }
 
     // MARK: - Bottom Overlay
@@ -155,9 +163,11 @@ struct StoryPlayerView: View {
                 viewModel.toggleLike()
             } label: {
                 Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
-                    .font(.title)
+                    .font(.title2)
                     .foregroundStyle(viewModel.isLiked ? .red : .white)
-                    .frame(width: 44, height: 44)
+                    .frame(width: 48, height: 48)
+                    .background(Color.black.opacity(0.3))
+                    .clipShape(Circle())
                     .contentTransition(.symbolEffect(.replace))
             }
             .padding(.trailing, 16)
@@ -195,10 +205,12 @@ struct StoryPlayerView: View {
     // MARK: - Image Processing
 
     private func downsampledImage(data: Data) -> UIImage? {
+        let screenScale = UITraitCollection.current.displayScale
+        let maxPixelSize = 2560.0 * max(screenScale, 2.0) // Safe upper bound for any device
         let options: [CFString: Any] = [
             kCGImageSourceCreateThumbnailFromImageAlways: true,
             kCGImageSourceCreateThumbnailWithTransform: true,
-            kCGImageSourceThumbnailMaxPixelSize: UIScreen.main.bounds.height * UIScreen.main.scale
+            kCGImageSourceThumbnailMaxPixelSize: maxPixelSize
         ]
         guard let source = CGImageSourceCreateWithData(data as CFData, nil),
               let cgImage = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary) else {

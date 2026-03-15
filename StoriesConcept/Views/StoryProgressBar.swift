@@ -30,20 +30,15 @@ struct StoryProgressBar: View {
 
     private func fillWidth(for index: Int, totalWidth: CGFloat) -> CGFloat {
         if index < activeIndex {
-            return totalWidth // Past segments in current session: fully filled
+            return totalWidth // Past segments: fully filled
         } else if index == activeIndex {
             return totalWidth * activeProgress // Active: progressive fill
-        } else if isSeenAt(index) {
-            return totalWidth // Future but previously seen: fully filled
         } else {
-            return 0 // Future and unseen: empty
+            return 0 // Future segments: always empty, regardless of seen state
         }
     }
 
     private func backgroundOpacity(for index: Int) -> Double {
-        if index > activeIndex && isSeenAt(index) {
-            return 0.5 // Previously seen — brighter background
-        }
-        return 0.3 // Default background
+        0.3 // Uniform background for all segments
     }
 }
