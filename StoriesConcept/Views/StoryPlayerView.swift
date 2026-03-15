@@ -76,10 +76,12 @@ struct StoryPlayerView: View {
         case .photo:
             if let data = viewModel.imageData(for: story),
                let uiImage = downsampledImage(data: data) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                Color.black
+                    .overlay {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFill()
+                    }
                     .clipped()
             } else {
                 Color.black
