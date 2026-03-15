@@ -227,14 +227,14 @@ final class StoryListViewModel {
 
                         stories.append(Story(
                             id: compositeId,
-                            pexelsMediaId: mediaId,
+                            mediaId: mediaId,
                             mediaURL: mediaURL,
                             type: .video,
                             duration: duration,
                             postedAt: postedAt
                         ))
                         persistedStories.append(PersistedStory(
-                            pexelsMediaId: mediaId,
+                            mediaId: mediaId,
                             mediaURL: videoFile.link,
                             mediaType: "video",
                             duration: duration,
@@ -253,14 +253,14 @@ final class StoryListViewModel {
 
                         stories.append(Story(
                             id: compositeId,
-                            pexelsMediaId: mediaId,
+                            mediaId: mediaId,
                             mediaURL: mediaURL,
                             type: .photo,
                             duration: Constants.photoAutoAdvanceDuration,
                             postedAt: postedAt
                         ))
                         persistedStories.append(PersistedStory(
-                            pexelsMediaId: mediaId,
+                            mediaId: mediaId,
                             mediaURL: photo.src.portrait,
                             mediaType: "photo",
                             duration: Constants.photoAutoAdvanceDuration,
@@ -298,12 +298,12 @@ final class StoryListViewModel {
             let type: MediaType = ps.mediaType == "video" ? .video : .photo
             let compositeId = Story.compositeId(
                 userId: persisted.id,
-                mediaId: ps.pexelsMediaId,
+                mediaId: ps.mediaId,
                 blockIndex: persisted.blockIndex
             )
             return Story(
                 id: compositeId,
-                pexelsMediaId: ps.pexelsMediaId,
+                mediaId: ps.mediaId,
                 mediaURL: url,
                 type: type,
                 duration: ps.duration,

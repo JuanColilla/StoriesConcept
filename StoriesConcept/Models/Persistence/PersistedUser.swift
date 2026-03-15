@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 struct PersistedStory: Codable, Sendable {
-    let pexelsMediaId: String
+    let mediaId: String
     let mediaURL: String
     let mediaType: String
     let duration: TimeInterval

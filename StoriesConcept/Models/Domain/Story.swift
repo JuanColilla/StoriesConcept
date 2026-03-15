@@ -1,10 +1,10 @@
 import Foundation
 
 struct Story: Identifiable, Sendable {
-    /// Composite ID: "\(userId)_\(pexelsMediaId)_\(blockIndex)"
+    /// Composite ID: "\(userId)_\(mediaId)_\(blockIndex)"
     let id: String
     /// Pexels media ID — used as cache key, shared across users for same content
-    let pexelsMediaId: String
+    let mediaId: String
     let mediaURL: URL
     let type: MediaType
     /// 15s for photos, actual duration (capped 45s) for videos
@@ -12,7 +12,7 @@ struct Story: Identifiable, Sendable {
     let postedAt: Date
 
     /// Cache key — shared across users for same Pexels content
-    var cacheKey: String { pexelsMediaId }
+    var cacheKey: String { mediaId }
 
     static func compositeId(userId: String, mediaId: String, blockIndex: Int) -> String {
         "\(userId)_\(mediaId)_\(blockIndex)"
