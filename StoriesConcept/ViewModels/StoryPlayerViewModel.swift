@@ -12,6 +12,9 @@ final class StoryPlayerViewModel {
     var isLoading: Bool = false
     var isPaused: Bool = false
     var shouldDismiss: Bool = false
+    /// Tracks whether the current video is still buffering.
+    /// Set by VideoPlayerView's KVO coordinator via onBufferingChanged callback.
+    var isVideoBuffering: Bool = false
 
     var currentStory: Story? {
         guard currentUserIndex < allUsers.count else { return nil }
@@ -60,6 +63,9 @@ final class StoryPlayerViewModel {
         self.prefetchService = prefetchService
         self.hapticService = hapticService
         self.loadMoreCallback = loadMoreCallback
+
+        // Assume buffering for initial video stories until player reports ready
+        isVideoBuffering = allUsers[initialUserIndex].stories[initialStoryIndex].type == .video
 
         updateLikedState()
         checkContentLoaded()
@@ -215,6 +221,9 @@ final class StoryPlayerViewModel {
     private func onStoryChanged() {
         stopTimer()
         progress = 0
+        // Assume video is buffering until the player reports otherwise.
+        // For photos this flag is irrelevant (isContentAvailable checks cache).
+        isVideoBuffering = currentStory?.type == .video
         updateLikedState()
         checkContentLoaded()
         startTimer()
@@ -231,8 +240,11 @@ final class StoryPlayerViewModel {
     }
 
     private func isContentAvailable(story: Story) -> Bool {
-        // Videos stream from URL, no need to pre-cache the video data
-        if story.type == .video { return true }
+        if story.type == .video {
+            // Video streams from URL — content is "available" once AVPlayer
+            // reports .playing via the KVO coordinator in VideoPlayerView.
+            return !isVideoBuffering
+        }
         return cacheService.isAvailable(mediaId: story.cacheKey)
     }
 

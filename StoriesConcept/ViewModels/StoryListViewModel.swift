@@ -61,9 +61,15 @@ final class StoryListViewModel {
     }
 
     func loadMoreIfNeeded(currentUser: User) {
-        // Trigger when within last 3 users
-        guard let index = users.firstIndex(where: { $0.id == currentUser.id }),
-              index >= users.count - 3,
+        // Legacy entry point — kept for StoryPlayerViewModel's loadMoreCallback.
+        // Falls back to O(n) scan only when called without an index.
+        guard let index = users.firstIndex(where: { $0.id == currentUser.id }) else { return }
+        loadMoreIfNeeded(currentIndex: index)
+    }
+
+    func loadMoreIfNeeded(currentIndex: Int) {
+        // Trigger when within last 3 users — O(1) check
+        guard currentIndex >= users.count - 3,
               !isLoadingMore else { return }
 
         Task { await loadMore() }
@@ -85,7 +91,18 @@ final class StoryListViewModel {
                 // Silently fail — existing content remains
             }
         } else {
-            // Block 2+: recycle content, no API calls
+            // Block 2+: recycle content, no API calls.
+            // If pools are empty (app re-launched from persistence), refetch
+            // content so recycled blocks have material to work with.
+            if photoPool.isEmpty && videoPool.isEmpty {
+                do {
+                    try await fetchContentPool(page: 1)
+                    if avatarPool.isEmpty { try await fetchAvatars() }
+                } catch {
+                    isLoadingMore = false
+                    return
+                }
+            }
             generateBlock(index: nextBlock)
         }
 
@@ -135,6 +152,17 @@ final class StoryListViewModel {
         var newUsers: [User] = []
         var persistedUsers: [PersistedUser] = []
 
+        // Shuffle pools and use rotating indices to maximize content variety.
+        // randomElement() causes frequent collisions (birthday paradox) when
+        // pool size (~15-30) is close to total stories assigned (~10-100).
+        // Rotating through a shuffled copy guarantees every item is used
+        // before any repetition, while still wrapping around for blocks
+        // that need more stories than pool size (block 2+ recycling).
+        let shuffledPhotos = photoPool.shuffled()
+        let shuffledVideos = videoPool.shuffled()
+        var photoIdx = 0
+        var videoIdx = 0
+
         for _ in 0..<Constants.usersPerBlock {
             // Pick unique name within block
             var name: String
@@ -158,52 +186,62 @@ final class StoryListViewModel {
             var persistedStories: [PersistedStory] = []
 
             for _ in 0..<storyCount {
-                let useVideo = Bool.random() && !videoPool.isEmpty
+                let useVideo = Bool.random() && !shuffledVideos.isEmpty
 
-                if useVideo, let video = videoPool.randomElement(),
-                   let videoFile = PexelsService.selectVideoFile(from: video.videoFiles),
-                   let mediaURL = URL(string: videoFile.link) {
-                    let mediaId = String(video.id)
-                    let compositeId = Story.compositeId(userId: userId, mediaId: mediaId, blockIndex: index)
-                    let duration = min(TimeInterval(video.duration), Constants.maxVideoDuration)
-                    let postedAt = Date().addingTimeInterval(-Double.random(in: 3600...86400))
+                if useVideo {
+                    // Rotate through shuffled video pool
+                    let video = shuffledVideos[videoIdx % shuffledVideos.count]
+                    videoIdx += 1
 
-                    stories.append(Story(
-                        id: compositeId,
-                        pexelsMediaId: mediaId,
-                        mediaURL: mediaURL,
-                        type: .video,
-                        duration: duration,
-                        postedAt: postedAt
-                    ))
-                    persistedStories.append(PersistedStory(
-                        pexelsMediaId: mediaId,
-                        mediaURL: videoFile.link,
-                        mediaType: "video",
-                        duration: duration,
-                        postedAt: postedAt
-                    ))
-                } else if let photo = photoPool.randomElement(),
-                          let mediaURL = URL(string: photo.src.portrait) {
-                    let mediaId = String(photo.id)
-                    let compositeId = Story.compositeId(userId: userId, mediaId: mediaId, blockIndex: index)
-                    let postedAt = Date().addingTimeInterval(-Double.random(in: 3600...86400))
+                    if let videoFile = PexelsService.selectVideoFile(from: video.videoFiles),
+                       let mediaURL = URL(string: videoFile.link) {
+                        let mediaId = String(video.id)
+                        let compositeId = Story.compositeId(userId: userId, mediaId: mediaId, blockIndex: index)
+                        let duration = min(TimeInterval(video.duration), Constants.maxVideoDuration)
+                        let postedAt = Date().addingTimeInterval(-Double.random(in: 3600...86400))
 
-                    stories.append(Story(
-                        id: compositeId,
-                        pexelsMediaId: mediaId,
-                        mediaURL: mediaURL,
-                        type: .photo,
-                        duration: Constants.photoAutoAdvanceDuration,
-                        postedAt: postedAt
-                    ))
-                    persistedStories.append(PersistedStory(
-                        pexelsMediaId: mediaId,
-                        mediaURL: photo.src.portrait,
-                        mediaType: "photo",
-                        duration: Constants.photoAutoAdvanceDuration,
-                        postedAt: postedAt
-                    ))
+                        stories.append(Story(
+                            id: compositeId,
+                            pexelsMediaId: mediaId,
+                            mediaURL: mediaURL,
+                            type: .video,
+                            duration: duration,
+                            postedAt: postedAt
+                        ))
+                        persistedStories.append(PersistedStory(
+                            pexelsMediaId: mediaId,
+                            mediaURL: videoFile.link,
+                            mediaType: "video",
+                            duration: duration,
+                            postedAt: postedAt
+                        ))
+                    }
+                } else if !shuffledPhotos.isEmpty {
+                    // Rotate through shuffled photo pool
+                    let photo = shuffledPhotos[photoIdx % shuffledPhotos.count]
+                    photoIdx += 1
+
+                    if let mediaURL = URL(string: photo.src.portrait) {
+                        let mediaId = String(photo.id)
+                        let compositeId = Story.compositeId(userId: userId, mediaId: mediaId, blockIndex: index)
+                        let postedAt = Date().addingTimeInterval(-Double.random(in: 3600...86400))
+
+                        stories.append(Story(
+                            id: compositeId,
+                            pexelsMediaId: mediaId,
+                            mediaURL: mediaURL,
+                            type: .photo,
+                            duration: Constants.photoAutoAdvanceDuration,
+                            postedAt: postedAt
+                        ))
+                        persistedStories.append(PersistedStory(
+                            pexelsMediaId: mediaId,
+                            mediaURL: photo.src.portrait,
+                            mediaType: "photo",
+                            duration: Constants.photoAutoAdvanceDuration,
+                            postedAt: postedAt
+                        ))
+                    }
                 }
             }
 

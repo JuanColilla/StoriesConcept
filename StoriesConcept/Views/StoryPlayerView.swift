@@ -4,6 +4,9 @@ struct StoryPlayerView: View {
     @State var viewModel: StoryPlayerViewModel
     @Environment(\.dismiss) private var dismiss
     @GestureState private var isLongPressing = false
+    /// Suppresses tap gestures briefly after a long press ends.
+    /// Without this, the finger-up from a hold triggers onTapGesture.
+    @State private var suppressTap = false
 
     var body: some View {
         ZStack {
@@ -16,6 +19,8 @@ struct StoryPlayerView: View {
 
                 // Loading overlay
                 if viewModel.isLoading {
+                    Color.black.opacity(0.4)
+                        .ignoresSafeArea()
                     ProgressView()
                         .tint(.white)
                         .scaleEffect(1.5)
@@ -25,11 +30,17 @@ struct StoryPlayerView: View {
                 HStack(spacing: 0) {
                     Color.clear
                         .contentShape(Rectangle())
-                        .onTapGesture { viewModel.previousStory() }
+                        .onTapGesture {
+                            guard !suppressTap else { return }
+                            viewModel.previousStory()
+                        }
 
                     Color.clear
                         .contentShape(Rectangle())
-                        .onTapGesture { viewModel.nextStory() }
+                        .onTapGesture {
+                            guard !suppressTap else { return }
+                            viewModel.nextStory()
+                        }
                 }
                 .ignoresSafeArea()
 
@@ -49,6 +60,12 @@ struct StoryPlayerView: View {
                 viewModel.pauseTimer()
             } else {
                 viewModel.resumeTimer()
+                // Briefly suppress taps so the finger-up from the hold
+                // doesn't trigger onTapGesture (next/previous story).
+                suppressTap = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                    suppressTap = false
+                }
             }
         }
         .onChange(of: viewModel.shouldDismiss) { _, shouldDismiss in
@@ -72,24 +89,38 @@ struct StoryPlayerView: View {
 
     @ViewBuilder
     private func contentView(for story: Story) -> some View {
-        switch story.type {
-        case .photo:
-            if let data = viewModel.imageData(for: story),
-               let uiImage = downsampledImage(data: data) {
-                Color.black
-                    .overlay {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFill()
+        // .id(story.id) forces SwiftUI to destroy and recreate the view when
+        // the story changes, rather than reusing the existing instance.
+        // Critical for VideoPlayerView: without this, updateUIViewController
+        // is called instead of makeUIViewController, so the old AVPlayer
+        // keeps playing the previous video.
+        Group {
+            switch story.type {
+            case .photo:
+                if let data = viewModel.imageData(for: story),
+                   let uiImage = downsampledImage(data: data) {
+                    Color.black
+                        .overlay {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .scaledToFill()
+                        }
+                        .clipped()
+                } else {
+                    Color.black
+                }
+            case .video:
+                VideoPlayerView(
+                    url: story.mediaURL,
+                    isPaused: viewModel.isPaused,
+                    onBufferingChanged: { isBuffering in
+                        viewModel.isVideoBuffering = isBuffering
                     }
-                    .clipped()
-            } else {
-                Color.black
-            }
-        case .video:
-            VideoPlayerView(url: story.mediaURL, isPaused: viewModel.isPaused)
+                )
                 .ignoresSafeArea()
+            }
         }
+        .id(story.id)
     }
 
     // MARK: - Top Overlay
@@ -198,9 +229,20 @@ struct StoryPlayerView: View {
     }
 
     private var longPressGesture: some Gesture {
-        LongPressGesture(minimumDuration: 0.2)
+        // Sequenced gesture: LongPress recognizes after 0.15s, then a zero-distance
+        // DragGesture keeps the gesture alive while the finger stays on screen.
+        // Without the drag sequel, LongPressGesture is discrete — it completes
+        // after recognition and @GestureState resets immediately.
+        LongPressGesture(minimumDuration: 0.15)
+            .sequenced(before: DragGesture(minimumDistance: 0))
             .updating($isLongPressing) { value, state, _ in
-                state = value
+                switch value {
+                case .second(true, _):
+                    // Long press recognized AND finger still held down
+                    state = true
+                default:
+                    break
+                }
             }
     }
 

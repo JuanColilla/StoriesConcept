@@ -7,6 +7,13 @@ final class PersistenceService {
     private let container: ModelContainer
     private var context: ModelContext
 
+    /// In-memory cache of seen story IDs to avoid repeated SwiftData queries.
+    /// Populated lazily on first access and updated on markSeen().
+    /// Eliminates O(N) DB queries per row when scrolling the story list.
+    private var seenCache: Set<String>?
+    /// In-memory cache of liked story IDs, same pattern as seenCache.
+    private var likedCache: Set<String>?
+
     init(container: ModelContainer) {
         self.container = container
         self.context = container.mainContext
@@ -50,10 +57,18 @@ final class PersistenceService {
         let state = fetchOrCreateState(storyId: storyId)
         state.isLiked = liked
         try? context.save()
+
+        // Keep cache in sync
+        if liked {
+            likedCache?.insert(storyId)
+        } else {
+            likedCache?.remove(storyId)
+        }
     }
 
     func isLiked(storyId: String) -> Bool {
-        fetchState(storyId: storyId)?.isLiked ?? false
+        loadLikedCacheIfNeeded()
+        return likedCache?.contains(storyId) ?? false
     }
 
     func markSeen(storyId: String) {
@@ -61,14 +76,19 @@ final class PersistenceService {
         state.isSeen = true
         state.seenAt = Date()
         try? context.save()
+
+        // Keep cache in sync — avoids re-querying on next scroll
+        seenCache?.insert(storyId)
     }
 
     func isSeen(storyId: String) -> Bool {
-        fetchState(storyId: storyId)?.isSeen ?? false
+        loadSeenCacheIfNeeded()
+        return seenCache?.contains(storyId) ?? false
     }
 
     func unseenCount(storyIds: [String]) -> Int {
-        storyIds.filter { !isSeen(storyId: $0) }.count
+        loadSeenCacheIfNeeded()
+        return storyIds.filter { !(seenCache?.contains($0) ?? false) }.count
     }
 
     func allSeen(storyIds: [String]) -> Bool {
@@ -76,13 +96,35 @@ final class PersistenceService {
     }
 
     func firstUnseenIndex(storyIds: [String]) -> Int {
+        loadSeenCacheIfNeeded()
         for (index, id) in storyIds.enumerated() {
-            if !isSeen(storyId: id) { return index }
+            if !(seenCache?.contains(id) ?? false) { return index }
         }
         return 0 // All seen -> start from beginning
     }
 
     // MARK: - Private
+
+    /// Loads all seen story IDs from SwiftData into memory on first access.
+    /// Subsequent calls are no-ops — the cache is kept in sync by markSeen().
+    private func loadSeenCacheIfNeeded() {
+        guard seenCache == nil else { return }
+        let descriptor = FetchDescriptor<StoryState>(
+            predicate: #Predicate { $0.isSeen == true }
+        )
+        let states = (try? context.fetch(descriptor)) ?? []
+        seenCache = Set(states.map(\.storyId))
+    }
+
+    /// Loads all liked story IDs from SwiftData into memory on first access.
+    private func loadLikedCacheIfNeeded() {
+        guard likedCache == nil else { return }
+        let descriptor = FetchDescriptor<StoryState>(
+            predicate: #Predicate { $0.isLiked == true }
+        )
+        let states = (try? context.fetch(descriptor)) ?? []
+        likedCache = Set(states.map(\.storyId))
+    }
 
     private func fetchState(storyId: String) -> StoryState? {
         let descriptor = FetchDescriptor<StoryState>(

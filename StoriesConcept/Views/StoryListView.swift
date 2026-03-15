@@ -47,7 +47,7 @@ struct StoryListView: View {
                         selectedUserIndex = index
                     }
                     .onAppear {
-                        viewModel.loadMoreIfNeeded(currentUser: user)
+                        viewModel.loadMoreIfNeeded(currentIndex: index)
                         viewModel.requestThumbnailPrefetch(for: [user])
                     }
 
