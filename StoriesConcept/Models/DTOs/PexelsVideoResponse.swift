@@ -1,6 +1,6 @@
 import Foundation
 
-struct PexelsVideoResponse: Codable, Sendable {
+struct PexelsVideoResponse: Codable, Sendable, Equatable {
     let videos: [PexelsVideo]
     let page: Int
     let perPage: Int
@@ -13,7 +13,7 @@ struct PexelsVideoResponse: Codable, Sendable {
     }
 }
 
-struct PexelsVideo: Codable, Identifiable, Sendable {
+struct PexelsVideo: Codable, Identifiable, Sendable, Equatable {
     let id: Int
     let width: Int
     let height: Int
@@ -27,7 +27,7 @@ struct PexelsVideo: Codable, Identifiable, Sendable {
     }
 }
 
-struct PexelsVideoFile: Codable, Identifiable, Sendable {
+struct PexelsVideoFile: Codable, Identifiable, Sendable, Equatable {
     let id: Int
     let quality: String
     let fileType: String

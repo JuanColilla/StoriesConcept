@@ -1,6 +1,6 @@
 import Foundation
 
-struct PexelsPhotoResponse: Codable, Sendable {
+struct PexelsPhotoResponse: Codable, Sendable, Equatable {
     let photos: [PexelsPhoto]
     let page: Int
     let perPage: Int
@@ -13,7 +13,7 @@ struct PexelsPhotoResponse: Codable, Sendable {
     }
 }
 
-struct PexelsPhoto: Codable, Identifiable, Sendable {
+struct PexelsPhoto: Codable, Identifiable, Sendable, Equatable {
     let id: Int
     let width: Int
     let height: Int
@@ -27,7 +27,7 @@ struct PexelsPhoto: Codable, Identifiable, Sendable {
     }
 }
 
-struct PexelsSrc: Codable, Sendable {
+struct PexelsSrc: Codable, Sendable, Equatable {
     let original: String
     let large2x: String
     let large: String

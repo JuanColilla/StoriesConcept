@@ -45,7 +45,7 @@ final class StoryListViewModel {
         // Check for persisted users first
         let persisted = persistenceService.fetchAllUsers()
         if !persisted.isEmpty {
-            users = persisted.map { toDomainUser($0) }
+            users = persisted.map { UserGenerator.toDomainUser($0) }
             currentBlockIndex = persistenceService.maxBlockIndex()
             isLoading = false
             return
@@ -173,148 +173,15 @@ final class StoryListViewModel {
     // MARK: - User Generation
 
     private func generateBlock(index: Int) {
-        var usedNames: Set<String> = []
-        var newUsers: [User] = []
-        var persistedUsers: [PersistedUser] = []
-
-        // Shuffle pools and use rotating indices to maximize content variety.
-        // randomElement() causes frequent collisions (birthday paradox) when
-        // pool size (~15-30) is close to total stories assigned (~10-100).
-        // Rotating through a shuffled copy guarantees every item is used
-        // before any repetition, while still wrapping around for blocks
-        // that need more stories than pool size (block 2+ recycling).
-        let shuffledPhotos = photoPool.shuffled()
-        let shuffledVideos = videoPool.shuffled()
-        var photoIdx = 0
-        var videoIdx = 0
-
-        for _ in 0..<Constants.usersPerBlock {
-            // Pick unique name within block
-            var name: String
-            repeat {
-                let baseName = Constants.namePool.randomElement()!
-                let suffix = Int.random(in: 10...9999)
-                name = "\(baseName)_\(suffix)"
-            } while usedNames.contains(name)
-            usedNames.insert(name)
-
-            let userId = name
-
-            // Pick avatar
-            let avatar = avatarPool.randomElement()
-            let avatarURLString = avatar?.src.medium ?? "https://via.placeholder.com/100"
-            let avatarURL = URL(string: avatarURLString)!
-
-            // Assign random number of stories (1-10)
-            let storyCount = Int.random(in: Constants.minStoriesPerUser...Constants.maxStoriesPerUser)
-            var stories: [Story] = []
-            var persistedStories: [PersistedStory] = []
-
-            for _ in 0..<storyCount {
-                let useVideo = Bool.random() && !shuffledVideos.isEmpty
-
-                if useVideo {
-                    // Rotate through shuffled video pool
-                    let video = shuffledVideos[videoIdx % shuffledVideos.count]
-                    videoIdx += 1
-
-                    if let videoFile = PexelsService.selectVideoFile(from: video.videoFiles),
-                       let mediaURL = URL(string: videoFile.link) {
-                        let mediaId = String(video.id)
-                        let compositeId = Story.compositeId(userId: userId, mediaId: mediaId, blockIndex: index)
-                        let duration = min(TimeInterval(video.duration), Constants.maxVideoDuration)
-                        let postedAt = Date().addingTimeInterval(-Double.random(in: 3600...86400))
-
-                        stories.append(Story(
-                            id: compositeId,
-                            mediaId: mediaId,
-                            mediaURL: mediaURL,
-                            type: .video,
-                            duration: duration,
-                            postedAt: postedAt
-                        ))
-                        persistedStories.append(PersistedStory(
-                            mediaId: mediaId,
-                            mediaURL: videoFile.link,
-                            mediaType: "video",
-                            duration: duration,
-                            postedAt: postedAt
-                        ))
-                    }
-                } else if !shuffledPhotos.isEmpty {
-                    // Rotate through shuffled photo pool
-                    let photo = shuffledPhotos[photoIdx % shuffledPhotos.count]
-                    photoIdx += 1
-
-                    if let mediaURL = URL(string: photo.src.portrait) {
-                        let mediaId = String(photo.id)
-                        let compositeId = Story.compositeId(userId: userId, mediaId: mediaId, blockIndex: index)
-                        let postedAt = Date().addingTimeInterval(-Double.random(in: 3600...86400))
-
-                        stories.append(Story(
-                            id: compositeId,
-                            mediaId: mediaId,
-                            mediaURL: mediaURL,
-                            type: .photo,
-                            duration: Constants.photoAutoAdvanceDuration,
-                            postedAt: postedAt
-                        ))
-                        persistedStories.append(PersistedStory(
-                            mediaId: mediaId,
-                            mediaURL: photo.src.portrait,
-                            mediaType: "photo",
-                            duration: Constants.photoAutoAdvanceDuration,
-                            postedAt: postedAt
-                        ))
-                    }
-                }
-            }
-
-            guard !stories.isEmpty else { continue }
-
-            let user = User(id: userId, displayName: userId, avatarURL: avatarURL, stories: stories)
-            newUsers.append(user)
-
-            let persisted = PersistedUser(
-                id: userId,
-                displayName: userId,
-                blockIndex: index,
-                avatarURL: avatarURLString,
-                stories: persistedStories
-            )
-            persistedUsers.append(persisted)
-        }
-
-        persistenceService.saveUsers(persistedUsers)
-        users.append(contentsOf: newUsers)
-        currentBlockIndex = index
-    }
-
-    // MARK: - Domain Conversion
-
-    private func toDomainUser(_ persisted: PersistedUser) -> User {
-        let stories = persisted.stories.compactMap { ps -> Story? in
-            guard let url = URL(string: ps.mediaURL) else { return nil }
-            let type: MediaType = ps.mediaType == "video" ? .video : .photo
-            let compositeId = Story.compositeId(
-                userId: persisted.id,
-                mediaId: ps.mediaId,
-                blockIndex: persisted.blockIndex
-            )
-            return Story(
-                id: compositeId,
-                mediaId: ps.mediaId,
-                mediaURL: url,
-                type: type,
-                duration: ps.duration,
-                postedAt: ps.postedAt
-            )
-        }
-        return User(
-            id: persisted.id,
-            displayName: persisted.displayName,
-            avatarURL: URL(string: persisted.avatarURL) ?? URL(string: "https://via.placeholder.com/100")!,
-            stories: stories
+        let result = UserGenerator.generate(
+            blockIndex: index,
+            photos: photoPool,
+            videos: videoPool,
+            avatars: avatarPool
         )
+
+        persistenceService.saveUsers(result.persisted)
+        users.append(contentsOf: result.users)
+        currentBlockIndex = index
     }
 }
