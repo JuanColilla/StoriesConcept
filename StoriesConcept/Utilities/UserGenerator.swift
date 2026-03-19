@@ -43,7 +43,7 @@ enum UserGenerator {
                     let video = shuffledVideos[videoIdx % shuffledVideos.count]
                     videoIdx += 1
 
-                    if let videoFile = PexelsService.selectVideoFile(from: video.videoFiles),
+                    if let videoFile = PexelsClient.selectVideoFile(from: video.videoFiles),
                        let mediaURL = URL(string: videoFile.link) {
                         let mediaId = String(video.id)
                         let compositeId = Story.compositeId(userId: userId, mediaId: mediaId, blockIndex: blockIndex)
