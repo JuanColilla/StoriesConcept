@@ -26,23 +26,10 @@ The project has two architectural approaches, each on its own branch:
 
 | Branch | Architecture | Description |
 |---|---|---|
-| `main` | **MVVM** | `@Observable` macro (iOS 17+), ViewModels, Services |
-| `variation/composableArchitecture` | **TCA** | Reducers, Effects, `@Dependency`, `@Shared` state |
+| `main` | **TCA** | Reducers, Effects, `@Dependency`, `@Shared` state, full test suite |
+| `variation/mvvm-no-testing` | **MVVM** | `@Observable` macro (iOS 17+), ViewModels, Services |
 
-### MVVM (main)
-
-```
-Views → ViewModels → Services → Models/Persistence
-```
-
-| Layer | Components |
-|---|---|
-| **Views** | `StoryListView`, `StoryPlayerView`, `StoryRowView`, `StoryProgressBar`, `VideoPlayerView` |
-| **ViewModels** | `StoryListViewModel`, `StoryPlayerViewModel` |
-| **Services** | `PexelsService`, `CacheService`, `PrefetchService`, `PersistenceService`, `HapticService`, `NetworkMonitor` |
-| **Models** | Domain (`User`, `Story`), DTOs (Pexels API responses), Persistence (`PersistedUser`, `StoryState`) |
-
-### TCA (variation/composableArchitecture)
+### TCA (main)
 
 ```
 Views → Store<Feature> → Reducer → Effects → Dependencies
@@ -57,6 +44,19 @@ Views → Store<Feature> → Reducer → Effects → Dependencies
 
 Navigation uses `@Presents` with `.ifLet` for the modal player. All side effects are managed through TCA's `Effect` system with cancellation IDs.
 
+### MVVM (variation/mvvm-no-testing)
+
+```
+Views → ViewModels → Services → Models/Persistence
+```
+
+| Layer | Components |
+|---|---|
+| **Views** | `StoryListView`, `StoryPlayerView`, `StoryRowView`, `StoryProgressBar`, `VideoPlayerView` |
+| **ViewModels** | `StoryListViewModel`, `StoryPlayerViewModel` |
+| **Services** | `PexelsService`, `CacheService`, `PrefetchService`, `PersistenceService`, `HapticService`, `NetworkMonitor` |
+| **Models** | Domain (`User`, `Story`), DTOs (Pexels API responses), Persistence (`PersistedUser`, `StoryState`) |
+
 ### Key design decisions
 
 - **Composite story ID** (`userId_mediaId_blockIndex`) — separates content identity (cache key) from story identity (seen/liked state), allowing the same Pexels media to appear for different users without cache collisions.
@@ -66,7 +66,7 @@ Navigation uses `@Presents` with `.ifLet` for the modal player. All side effects
 
 ## Testing
 
-The TCA branch includes a comprehensive test suite:
+The project includes a comprehensive test suite (TCA branch on `main`):
 
 ### Unit Tests (31 tests)
 
@@ -101,7 +101,7 @@ xcodebuild test -project StoriesConcept.xcodeproj -scheme StoriesConcept \
 |---|---|
 | **Platform** | iOS 17+ |
 | **UI** | SwiftUI |
-| **Architecture** | MVVM (`main`) / TCA 1.25.1 (`variation/composableArchitecture`) |
+| **Architecture** | TCA 1.25.1 (`main`) / MVVM (`variation/mvvm-no-testing`) |
 | **Persistence** | SwiftData |
 | **Video** | AVFoundation / AVKit |
 | **Networking** | URLSession (async/await) |
@@ -126,10 +126,10 @@ StoriesConcept/
 │   ├── DTOs/                     # Pexels API response models
 │   ├── Domain/                   # User, Story, MediaType
 │   └── Persistence/              # SwiftData models
-├── Features/                     # TCA branch only
+├── Features/
 │   ├── StoryList/                # StoryListFeature (Reducer)
 │   └── StoryPlayer/              # StoryPlayerFeature (Reducer)
-├── Dependencies/                 # TCA branch only
+├── Dependencies/
 │   ├── PexelsClient.swift
 │   ├── CacheClient.swift
 │   ├── PersistenceClient.swift
@@ -140,10 +140,6 @@ StoriesConcept/
 │   ├── StoryRowView.swift
 │   ├── StoryProgressBar.swift
 │   └── VideoPlayerView.swift
-├── Services/                     # MVVM branch only
-│   ├── PexelsService.swift
-│   ├── CacheService.swift
-│   └── ...
 └── Utilities/
     └── Constants.swift
 
