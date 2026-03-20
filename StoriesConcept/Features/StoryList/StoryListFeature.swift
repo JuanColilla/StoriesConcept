@@ -3,6 +3,19 @@ import Foundation
 import os
 import Sharing
 
+// MARK: - Payload types (file-scope to avoid @Reducer macro circular reference)
+
+struct ContentPayload: Equatable, Sendable {
+    let photos: [PexelsPhoto]
+    let videos: [PexelsVideo]
+    let avatars: [PexelsPhoto]
+}
+
+struct MoreContentPayload: Equatable, Sendable {
+    let photos: [PexelsPhoto]
+    let videos: [PexelsVideo]
+}
+
 @Reducer
 struct StoryListFeature {
     @ObservableState
@@ -41,17 +54,6 @@ struct StoryListFeature {
 
         // Child reducer
         case player(PresentationAction<StoryPlayerFeature.Action>)
-    }
-
-    struct ContentPayload: Equatable, Sendable {
-        let photos: [PexelsPhoto]
-        let videos: [PexelsVideo]
-        let avatars: [PexelsPhoto]
-    }
-
-    struct MoreContentPayload: Equatable, Sendable {
-        let photos: [PexelsPhoto]
-        let videos: [PexelsVideo]
     }
 
     @Dependency(\.pexelsClient) var pexelsClient

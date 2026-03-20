@@ -3,6 +3,12 @@ import Foundation
 import os
 import Sharing
 
+private enum StoryPlayerCancelID: Hashable, Sendable {
+    case timer
+    case contentCheck
+    case prefetch
+}
+
 @Reducer
 struct StoryPlayerFeature {
     @ObservableState
@@ -62,12 +68,6 @@ struct StoryPlayerFeature {
         }
     }
 
-    enum CancelID {
-        case timer
-        case contentCheck
-        case prefetch
-    }
-
     @Dependency(\.continuousClock) var clock
     @Dependency(\.cacheClient) var cacheClient
     @Dependency(\.persistenceClient) var persistenceClient
@@ -119,7 +119,7 @@ struct StoryPlayerFeature {
                 let liked = state.isLiked
                 do {
                     @Shared(.inMemory("likedIds")) var likedIds: Set<String> = []
-                    $likedIds.withLock {
+                    _ = $likedIds.withLock {
                         if liked { $0.insert(id) } else { $0.remove(id) }
                     }
                 }
@@ -131,7 +131,7 @@ struct StoryPlayerFeature {
             case .longPressStarted:
                 state.isPaused = true
                 state.isTimerRunning = false
-                return .cancel(id: CancelID.timer)
+                return .cancel(id: StoryPlayerCancelID.timer)
 
             case .longPressEnded:
                 state.isPaused = false
@@ -142,7 +142,7 @@ struct StoryPlayerFeature {
             case .appBackgrounded:
                 state.isPaused = true
                 state.isTimerRunning = false
-                return .cancel(id: CancelID.timer)
+                return .cancel(id: StoryPlayerCancelID.timer)
 
             case .appForegrounded:
                 guard !state.isPaused else { return .none }
@@ -151,9 +151,9 @@ struct StoryPlayerFeature {
             case .onDisappear:
                 state.isTimerRunning = false
                 return .merge(
-                    .cancel(id: CancelID.timer),
-                    .cancel(id: CancelID.contentCheck),
-                    .cancel(id: CancelID.prefetch)
+                    .cancel(id: StoryPlayerCancelID.timer),
+                    .cancel(id: StoryPlayerCancelID.contentCheck),
+                    .cancel(id: StoryPlayerCancelID.prefetch)
                 )
 
             // MARK: - Content loading
@@ -163,7 +163,7 @@ struct StoryPlayerFeature {
                 if cacheClient.isAvailable(mediaId) {
                     state.isContentLoading = false
                     return .merge(
-                        .cancel(id: CancelID.contentCheck),
+                        .cancel(id: StoryPlayerCancelID.contentCheck),
                         startTimer(&state)
                     )
                 }
@@ -223,8 +223,8 @@ struct StoryPlayerFeature {
         state.shouldDismiss = true
         state.isTimerRunning = false
         return .merge(
-            .cancel(id: CancelID.timer),
-            .cancel(id: CancelID.contentCheck),
+            .cancel(id: StoryPlayerCancelID.timer),
+            .cancel(id: StoryPlayerCancelID.contentCheck),
             .run { _ in prefetchClient.cancelAll() },
             .send(.delegate(.dismissed))
         )
@@ -239,8 +239,8 @@ struct StoryPlayerFeature {
         state.isLiked = persistenceClient.isLiked(state.currentStory.id)
 
         return .merge(
-            .cancel(id: CancelID.timer),
-            .cancel(id: CancelID.contentCheck),
+            .cancel(id: StoryPlayerCancelID.timer),
+            .cancel(id: StoryPlayerCancelID.contentCheck),
             startPlayback(&state),
             .run { _ in
                 switch haptic {
@@ -278,15 +278,14 @@ struct StoryPlayerFeature {
         let duration = storyDuration(state.currentStory)
         let startProgress = state.progress
 
-        return .run { send in
+        return .run { [clock] send in
             let startOffset = startProgress * duration
-            let start = clock.now
+            var elapsed: Double = 0
+            let interval: Duration = .milliseconds(16)
 
-            for await _ in clock.timer(interval: .milliseconds(16)) {
-                let elapsed = clock.now - start
-                let elapsedSeconds = Double(elapsed.components.seconds)
-                    + Double(elapsed.components.attoseconds) / 1_000_000_000_000_000_000
-                let total = startOffset + elapsedSeconds
+            for await _ in clock.timer(interval: interval) {
+                elapsed += 0.016
+                let total = startOffset + elapsed
 
                 if total >= duration {
                     await send(.storyCompleted)
@@ -295,7 +294,7 @@ struct StoryPlayerFeature {
                 await send(.timerTick(total))
             }
         }
-        .cancellable(id: CancelID.timer, cancelInFlight: true)
+        .cancellable(id: StoryPlayerCancelID.timer, cancelInFlight: true)
     }
 
     private func storyDuration(_ story: Story) -> Double {
@@ -314,7 +313,7 @@ struct StoryPlayerFeature {
                 await send(.contentCheckTick)
             }
         }
-        .cancellable(id: CancelID.contentCheck, cancelInFlight: true)
+        .cancellable(id: StoryPlayerCancelID.contentCheck, cancelInFlight: true)
     }
 
     // MARK: - Seen/Liked
@@ -322,7 +321,7 @@ struct StoryPlayerFeature {
     private func markSeenEffect(_ state: State) -> Effect<Action> {
         let storyId = state.currentStory.id
         @Shared(.inMemory("seenIds")) var seenIds: Set<String> = []
-        $seenIds.withLock { $0.insert(storyId) }
+        _ = $seenIds.withLock { $0.insert(storyId) }
 
         return .merge(
             .run { _ in
@@ -344,6 +343,6 @@ struct StoryPlayerFeature {
         return .run { _ in
             await prefetchClient.prefetchStories(current, next)
         }
-        .cancellable(id: CancelID.prefetch, cancelInFlight: true)
+        .cancellable(id: StoryPlayerCancelID.prefetch, cancelInFlight: true)
     }
 }

@@ -11,24 +11,19 @@ struct CacheClient: Sendable {
 
 extension CacheClient: DependencyKey {
     static let liveValue: CacheClient = {
-        // Use an actor to make the cache thread-safe
-        let cache = CacheActor()
+        let cache = CacheStorage()
         return CacheClient(
             save: { data, mediaId, ttl in
-                await cache.save(data: data, for: mediaId, ttl: ttl)
+                cache.save(data: data, for: mediaId, ttl: ttl)
             },
             load: { mediaId in
-                await cache.load(mediaId: mediaId)
+                cache.load(mediaId: mediaId)
             },
             isAvailable: { mediaId in
-                // Synchronous check — memory cache or disk file exists
-                // This needs a non-async path for reducer synchronous checks
-                FileManager.default.fileExists(
-                    atPath: CacheActor.cacheDirectory.appendingPathComponent(mediaId).path
-                )
+                cache.isAvailable(mediaId: mediaId)
             },
             clearAll: {
-                await cache.clearAll()
+                cache.clearAll()
             }
         )
     }()
@@ -37,14 +32,14 @@ extension CacheClient: DependencyKey {
         save: { _, _, _ in },
         load: { _ in nil },
         isAvailable: { _ in false },
-        clearAll: {}
+        clearAll: { }
     )
 
     static let previewValue = CacheClient(
         save: { _, _, _ in },
         load: { _ in nil },
         isAvailable: { _ in true },
-        clearAll: {}
+        clearAll: { }
     )
 }
 
@@ -55,18 +50,19 @@ extension DependencyValues {
     }
 }
 
-// MARK: - Cache Actor (thread-safe implementation)
+// MARK: - Thread-safe storage (NOT an actor — uses NSLock for sync access)
 
-private actor CacheActor {
-    static let cacheDirectory: URL = {
+private final class CacheStorage: @unchecked Sendable {
+    private let memoryCache = NSCache<NSString, NSData>()
+    private let lock = NSLock()
+    private var metadata: [String: Date] = [:]
+
+    private let cacheDirectory: URL = {
         let caches = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
         let dir = caches.appendingPathComponent("StoryCache")
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         return dir
     }()
-
-    private var metadata: [String: Date] = [:]
-    private let memoryCache = NSCache<NSString, NSData>()
 
     init() {
         memoryCache.countLimit = 50
@@ -75,56 +71,68 @@ private actor CacheActor {
     }
 
     func save(data: Data, for mediaId: String, ttl: TimeInterval) {
+        lock.lock()
+        defer { lock.unlock() }
         memoryCache.setObject(data as NSData, forKey: mediaId as NSString, cost: data.count)
-        let fileURL = Self.cacheDirectory.appendingPathComponent(mediaId)
+        let fileURL = cacheDirectory.appendingPathComponent(mediaId)
         try? data.write(to: fileURL)
         metadata[mediaId] = Date().addingTimeInterval(ttl)
         saveMetadata()
-        Logger.cache.debug("Saved \(mediaId, privacy: .public) (\(data.count) bytes)")
     }
 
     func load(mediaId: String) -> Data? {
+        lock.lock()
+        defer { lock.unlock() }
         if let expiresAt = metadata[mediaId], Date() > expiresAt {
-            remove(mediaId: mediaId)
+            removeUnlocked(mediaId: mediaId)
             return nil
         }
         if let cached = memoryCache.object(forKey: mediaId as NSString) {
             return cached as Data
         }
-        let fileURL = Self.cacheDirectory.appendingPathComponent(mediaId)
+        let fileURL = cacheDirectory.appendingPathComponent(mediaId)
         guard let data = try? Data(contentsOf: fileURL) else { return nil }
         memoryCache.setObject(data as NSData, forKey: mediaId as NSString, cost: data.count)
         return data
     }
 
-    func clearAll() {
-        memoryCache.removeAllObjects()
-        try? FileManager.default.removeItem(at: Self.cacheDirectory)
-        try? FileManager.default.createDirectory(at: Self.cacheDirectory, withIntermediateDirectories: true)
-        metadata.removeAll()
-        Logger.cache.info("Cache cleared")
+    func isAvailable(mediaId: String) -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        if let expiresAt = metadata[mediaId], Date() > expiresAt {
+            return false
+        }
+        if memoryCache.object(forKey: mediaId as NSString) != nil { return true }
+        return FileManager.default.fileExists(atPath: cacheDirectory.appendingPathComponent(mediaId).path)
     }
 
-    private func remove(mediaId: String) {
+    func clearAll() {
+        lock.lock()
+        defer { lock.unlock() }
+        memoryCache.removeAllObjects()
+        try? FileManager.default.removeItem(at: cacheDirectory)
+        try? FileManager.default.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
+        metadata.removeAll()
+    }
+
+    private func removeUnlocked(mediaId: String) {
         memoryCache.removeObject(forKey: mediaId as NSString)
-        let fileURL = Self.cacheDirectory.appendingPathComponent(mediaId)
+        let fileURL = cacheDirectory.appendingPathComponent(mediaId)
         try? FileManager.default.removeItem(at: fileURL)
         metadata.removeValue(forKey: mediaId)
         saveMetadata()
     }
 
-    private var metadataFile: URL {
-        Self.cacheDirectory.appendingPathComponent("cache_metadata.plist")
-    }
-
     private func loadMetadata() {
-        guard let data = try? Data(contentsOf: metadataFile),
+        let file = cacheDirectory.appendingPathComponent("cache_metadata.plist")
+        guard let data = try? Data(contentsOf: file),
               let dict = try? JSONDecoder().decode([String: Date].self, from: data) else { return }
         metadata = dict
     }
 
     private func saveMetadata() {
+        let file = cacheDirectory.appendingPathComponent("cache_metadata.plist")
         guard let data = try? JSONEncoder().encode(metadata) else { return }
-        try? data.write(to: metadataFile)
+        try? data.write(to: file)
     }
 }

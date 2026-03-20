@@ -11,7 +11,7 @@ struct PrefetchClient: Sendable {
 
 extension PrefetchClient: DependencyKey {
     static let liveValue: PrefetchClient = {
-        let manager = PrefetchManager()
+        let manager = PrefetchActor()
         return PrefetchClient(
             prefetchThumbnails: { users in
                 await manager.prefetchThumbnails(for: users)
@@ -20,7 +20,7 @@ extension PrefetchClient: DependencyKey {
                 await manager.prefetchStories(currentUser: currentUser, nextUser: nextUser)
             },
             cancelAll: {
-                manager.cancelAll()
+                Task { await manager.cancelAll() }
             }
         )
     }()
@@ -39,82 +39,65 @@ extension DependencyValues {
     }
 }
 
-// MARK: - Prefetch Manager (internal actor)
+// MARK: - Actor-based prefetch manager (Swift 6 safe)
 
-private final class PrefetchManager: @unchecked Sendable {
+private actor PrefetchActor {
     private var activeTasks: [String: Task<Void, Never>] = [:]
-    private let lock = NSLock()
 
     @Dependency(\.cacheClient) var cacheClient
     @Dependency(\.pexelsClient) var pexelsClient
 
-    func prefetchThumbnails(for users: [User]) async {
+    func prefetchThumbnails(for users: [User]) {
         for user in users {
             guard let firstStory = user.stories.first else { continue }
             let cacheKey = firstStory.cacheKey
             guard !cacheClient.isAvailable(cacheKey) else { continue }
 
             let taskKey = "thumb_\(cacheKey)"
-            lock.lock()
-            let exists = activeTasks[taskKey] != nil
-            lock.unlock()
-            guard !exists else { continue }
+            guard activeTasks[taskKey] == nil else { continue }
 
             let url = firstStory.mediaURL
-            let task = Task.detached(priority: .background) { [weak self] in
-                guard let self else { return }
+            activeTasks[taskKey] = Task.detached(priority: .background) { [cacheClient, pexelsClient] in
                 do {
-                    let data = try await self.pexelsClient.downloadData(url)
-                    await self.cacheClient.save(data, cacheKey, Constants.cacheTTL)
+                    let data = try await pexelsClient.downloadData(url)
+                    await cacheClient.save(data, cacheKey, Constants.cacheTTL)
                 } catch {
-                    // Silent failure — will retry on demand
+                    // Silent failure
                 }
             }
-            lock.lock()
-            activeTasks[taskKey] = task
-            lock.unlock()
         }
     }
 
-    func prefetchStories(currentUser: User, nextUser: User?) async {
-        await prefetchAllStories(for: currentUser, priority: .userInitiated)
+    func prefetchStories(currentUser: User, nextUser: User?) {
+        prefetchAllStories(for: currentUser, priority: .userInitiated)
         if let nextUser {
-            await prefetchAllStories(for: nextUser, priority: .background)
+            prefetchAllStories(for: nextUser, priority: .background)
         }
     }
 
     func cancelAll() {
-        lock.lock()
         activeTasks.values.forEach { $0.cancel() }
         activeTasks.removeAll()
-        lock.unlock()
         Logger.prefetch.info("All prefetch tasks cancelled")
     }
 
-    private func prefetchAllStories(for user: User, priority: TaskPriority) async {
+    private func prefetchAllStories(for user: User, priority: TaskPriority) {
         for story in user.stories where story.type == .photo {
             let cacheKey = story.cacheKey
             guard !cacheClient.isAvailable(cacheKey) else { continue }
 
             let taskKey = "story_\(cacheKey)"
-            lock.lock()
-            let exists = activeTasks[taskKey] != nil
-            lock.unlock()
-            guard !exists else { continue }
+            guard activeTasks[taskKey] == nil else { continue }
 
             let url = story.mediaURL
-            let task = Task.detached(priority: priority) { [weak self] in
-                guard let self else { return }
+            activeTasks[taskKey] = Task.detached(priority: priority) { [cacheClient, pexelsClient] in
                 do {
-                    let data = try await self.pexelsClient.downloadData(url)
-                    await self.cacheClient.save(data, cacheKey, Constants.cacheTTL)
+                    let data = try await pexelsClient.downloadData(url)
+                    await cacheClient.save(data, cacheKey, Constants.cacheTTL)
                 } catch {
                     // Silent failure
                 }
             }
-            lock.lock()
-            activeTasks[taskKey] = task
-            lock.unlock()
         }
     }
 }

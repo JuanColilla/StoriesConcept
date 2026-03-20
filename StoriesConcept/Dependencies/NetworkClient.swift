@@ -51,7 +51,9 @@ final class NetworkMonitorLive: @unchecked Sendable {
     private var continuations: [UUID: AsyncStream<Bool>.Continuation] = [:]
     private let lock = NSLock()
 
-    var currentStatus: Bool { isConnected }
+    var currentStatus: Bool {
+        lock.withLock { isConnected }
+    }
 
     func start() {
         monitor.pathUpdateHandler = { [weak self] path in
@@ -60,9 +62,7 @@ final class NetworkMonitorLive: @unchecked Sendable {
             Task { @MainActor in
                 self.isConnected = connected
             }
-            self.lock.lock()
-            let conts = self.continuations.values
-            self.lock.unlock()
+            let conts = self.lock.withLock { Array(self.continuations.values) }
             for continuation in conts {
                 continuation.yield(connected)
             }
@@ -74,31 +74,30 @@ final class NetworkMonitorLive: @unchecked Sendable {
 
     func stop() {
         monitor.cancel()
-        lock.lock()
-        continuations.values.forEach { $0.finish() }
-        continuations.removeAll()
-        lock.unlock()
+        let conts = lock.withLock {
+            let vals = Array(continuations.values)
+            continuations.removeAll()
+            return vals
+        }
+        conts.forEach { $0.finish() }
     }
 
     func connectivityStream() -> AsyncStream<Bool> {
-        AsyncStream { [weak self] continuation in
+        let id = UUID()
+        return AsyncStream { [weak self] continuation in
             guard let self else {
                 continuation.finish()
                 return
             }
-            let id = UUID()
-            self.lock.lock()
-            self.continuations[id] = continuation
-            self.lock.unlock()
-
-            // Emit current status immediately
-            continuation.yield(self.isConnected)
-
+            self.lock.withLock {
+                self.continuations[id] = continuation
+            }
+            continuation.yield(self.lock.withLock { self.isConnected })
             continuation.onTermination = { [weak self] _ in
                 guard let self else { return }
-                self.lock.lock()
-                self.continuations.removeValue(forKey: id)
-                self.lock.unlock()
+                self.lock.withLock {
+                    self.continuations.removeValue(forKey: id)
+                }
             }
         }
     }
