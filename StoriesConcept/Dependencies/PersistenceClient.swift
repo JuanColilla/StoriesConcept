@@ -24,21 +24,16 @@ struct PersistenceClient: Sendable {
     var loadLikedCache: @Sendable () async throws -> Set<String>
 }
 
-// MARK: - MainActor Storage (wraps ModelContext safely)
+// MARK: - ModelActor Storage
 
-@MainActor
-private final class PersistenceStorage {
-    private let context: ModelContext
+@ModelActor
+actor PersistenceStorage {
     private var seenCache: Set<String>?
     private var likedCache: Set<String>?
 
-    init(container: ModelContainer) {
-        self.context = container.mainContext
-    }
-
     func saveUsers(_ users: [PersistedUser]) throws {
-        users.forEach { context.insert($0) }
-        try context.save()
+        users.forEach { modelContext.insert($0) }
+        try modelContext.save()
         Logger.persist.info("Saved \(users.count, privacy: .public) users")
     }
 
@@ -46,13 +41,13 @@ private final class PersistenceStorage {
         let descriptor = FetchDescriptor<PersistedUser>(
             sortBy: [SortDescriptor(\.blockIndex)]
         )
-        return (try? context.fetch(descriptor)) ?? []
+        return (try? modelContext.fetch(descriptor)) ?? []
     }
 
     func fetchUsers(blockIndex: Int) -> [PersistedUser] {
-        var descriptor = FetchDescriptor<PersistedUser>()
-        descriptor.predicate = #Predicate { $0.blockIndex == blockIndex }
-        return (try? context.fetch(descriptor)) ?? []
+        let descriptor = FetchDescriptor<PersistedUser>()
+        let all = (try? modelContext.fetch(descriptor)) ?? []
+        return all.filter { $0.blockIndex == blockIndex }
     }
 
     func maxBlockIndex() -> Int {
@@ -63,7 +58,7 @@ private final class PersistenceStorage {
         let state = fetchOrCreateState(storyId: storyId)
         state.isSeen = true
         state.seenAt = Date()
-        try context.save()
+        try modelContext.save()
         seenCache?.insert(storyId)
         Logger.persist.info("Marked seen: \(storyId, privacy: .public)")
     }
@@ -71,7 +66,7 @@ private final class PersistenceStorage {
     func setLiked(storyId: String, liked: Bool) throws {
         let state = fetchOrCreateState(storyId: storyId)
         state.isLiked = liked
-        try context.save()
+        try modelContext.save()
         if liked { likedCache?.insert(storyId) } else { likedCache?.remove(storyId) }
     }
 
@@ -104,21 +99,17 @@ private final class PersistenceStorage {
     }
 
     func loadSeenCache() -> Set<String> {
-        let descriptor = FetchDescriptor<StoryState>(
-            predicate: #Predicate { $0.isSeen == true }
-        )
-        let states = (try? context.fetch(descriptor)) ?? []
-        let ids = Set(states.map(\.storyId))
+        let descriptor = FetchDescriptor<StoryState>()
+        let all = (try? modelContext.fetch(descriptor)) ?? []
+        let ids = Set(all.filter(\.isSeen).map(\.storyId))
         seenCache = ids
         return ids
     }
 
     func loadLikedCache() -> Set<String> {
-        let descriptor = FetchDescriptor<StoryState>(
-            predicate: #Predicate { $0.isLiked == true }
-        )
-        let states = (try? context.fetch(descriptor)) ?? []
-        let ids = Set(states.map(\.storyId))
+        let descriptor = FetchDescriptor<StoryState>()
+        let all = (try? modelContext.fetch(descriptor)) ?? []
+        let ids = Set(all.filter(\.isLiked).map(\.storyId))
         likedCache = ids
         return ids
     }
@@ -136,14 +127,13 @@ private final class PersistenceStorage {
     }
 
     private func fetchOrCreateState(storyId: String) -> StoryState {
-        let descriptor = FetchDescriptor<StoryState>(
-            predicate: #Predicate { $0.storyId == storyId }
-        )
-        if let existing = try? context.fetch(descriptor).first {
+        let descriptor = FetchDescriptor<StoryState>()
+        let all = (try? modelContext.fetch(descriptor)) ?? []
+        if let existing = all.first(where: { $0.storyId == storyId }) {
             return existing
         }
         let state = StoryState(storyId: storyId)
-        context.insert(state)
+        modelContext.insert(state)
         return state
     }
 }
@@ -151,9 +141,8 @@ private final class PersistenceStorage {
 // MARK: - Dependency Key
 
 extension PersistenceClient: DependencyKey {
-    @MainActor
     static func live(container: ModelContainer) -> PersistenceClient {
-        let storage = PersistenceStorage(container: container)
+        let storage = PersistenceStorage(modelContainer: container)
 
         return PersistenceClient(
             saveUsers: { users in try await storage.saveUsers(users) },

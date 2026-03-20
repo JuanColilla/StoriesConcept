@@ -114,7 +114,7 @@ struct StoryPlayerFeature {
                 let liked = state.isLiked
                 do {
                     @Shared(.inMemory("likedIds")) var likedIds: Set<String> = []
-                    _ = $likedIds.withLock {
+                    $likedIds.withLock {
                         if liked { $0.insert(id) } else { $0.remove(id) }
                     }
                 }

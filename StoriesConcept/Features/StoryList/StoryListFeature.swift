@@ -177,8 +177,9 @@ struct StoryListFeature {
             case .blockGenerated(let users, let persisted, let blockIndex):
                 state.users.append(contentsOf: users)
                 state.currentBlockIndex = blockIndex
+                nonisolated(unsafe) let toSave = persisted
                 return .run { _ in
-                    try await persistenceClient.saveUsers(persisted)
+                    try await persistenceClient.saveUsers(toSave)
                 }
 
             // MARK: - Refresh

@@ -95,7 +95,7 @@ final class NetworkMonitorLive: @unchecked Sendable {
             continuation.yield(self.lock.withLock { self.isConnected })
             continuation.onTermination = { [weak self] _ in
                 guard let self else { return }
-                self.lock.withLock {
+                _ = self.lock.withLock {
                     self.continuations.removeValue(forKey: id)
                 }
             }
