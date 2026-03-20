@@ -9,8 +9,7 @@ private enum StoryPlayerCancelID: Hashable, Sendable {
     case prefetch
 }
 
-@Reducer
-struct StoryPlayerFeature {
+struct StoryPlayerFeature: Reducer {
     @ObservableState
     struct State: Equatable {
         var allUsers: [User]
@@ -35,6 +34,7 @@ struct StoryPlayerFeature {
         var isLastUser: Bool { currentUserIndex >= allUsers.count - 1 }
     }
 
+    @CasePathable
     enum Action {
         // User interactions
         case tappedRight
@@ -62,6 +62,7 @@ struct StoryPlayerFeature {
         // Delegate — communication to parent
         case delegate(Delegate)
 
+        @CasePathable
         enum Delegate {
             case storySeen(String)
             case dismissed

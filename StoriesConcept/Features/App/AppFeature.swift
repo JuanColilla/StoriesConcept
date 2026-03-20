@@ -2,13 +2,13 @@ import ComposableArchitecture
 import Foundation
 import os
 
-@Reducer
-struct AppFeature {
+struct AppFeature: Reducer {
     @ObservableState
     struct State: Equatable {
         var storyList = StoryListFeature.State()
     }
 
+    @CasePathable
     enum Action {
         case storyList(StoryListFeature.Action)
     }

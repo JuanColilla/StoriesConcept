@@ -16,8 +16,7 @@ struct MoreContentPayload: Equatable, Sendable {
     let videos: [PexelsVideo]
 }
 
-@Reducer
-struct StoryListFeature {
+struct StoryListFeature: Reducer {
     @ObservableState
     struct State: Equatable {
         var users: [User] = []
@@ -34,6 +33,7 @@ struct StoryListFeature {
         @Presents var player: StoryPlayerFeature.State?
     }
 
+    @CasePathable
     enum Action {
         // User interactions
         case onAppear
