@@ -3,13 +3,9 @@ import Foundation
 import os
 import Sharing
 
-private enum StoryPlayerCancelID: Hashable, Sendable {
-    case timer
-    case contentCheck
-    case prefetch
-}
-
-struct StoryPlayerFeature: Reducer {
+@Reducer
+struct StoryPlayerFeature {
+    enum CancelID { case timer, contentCheck, prefetch }
     @ObservableState
     struct State: Equatable {
         var allUsers: [User]
@@ -34,7 +30,6 @@ struct StoryPlayerFeature: Reducer {
         var isLastUser: Bool { currentUserIndex >= allUsers.count - 1 }
     }
 
-    @CasePathable
     enum Action {
         // User interactions
         case tappedRight
@@ -62,7 +57,6 @@ struct StoryPlayerFeature: Reducer {
         // Delegate — communication to parent
         case delegate(Delegate)
 
-        @CasePathable
         enum Delegate {
             case storySeen(String)
             case dismissed
@@ -132,7 +126,7 @@ struct StoryPlayerFeature: Reducer {
             case .longPressStarted:
                 state.isPaused = true
                 state.isTimerRunning = false
-                return .cancel(id: StoryPlayerCancelID.timer)
+                return .cancel(id: CancelID.timer)
 
             case .longPressEnded:
                 state.isPaused = false
@@ -143,7 +137,7 @@ struct StoryPlayerFeature: Reducer {
             case .appBackgrounded:
                 state.isPaused = true
                 state.isTimerRunning = false
-                return .cancel(id: StoryPlayerCancelID.timer)
+                return .cancel(id: CancelID.timer)
 
             case .appForegrounded:
                 guard !state.isPaused else { return .none }
@@ -152,9 +146,9 @@ struct StoryPlayerFeature: Reducer {
             case .onDisappear:
                 state.isTimerRunning = false
                 return .merge(
-                    .cancel(id: StoryPlayerCancelID.timer),
-                    .cancel(id: StoryPlayerCancelID.contentCheck),
-                    .cancel(id: StoryPlayerCancelID.prefetch)
+                    .cancel(id: CancelID.timer),
+                    .cancel(id: CancelID.contentCheck),
+                    .cancel(id: CancelID.prefetch)
                 )
 
             // MARK: - Content loading
@@ -164,7 +158,7 @@ struct StoryPlayerFeature: Reducer {
                 if cacheClient.isAvailable(mediaId) {
                     state.isContentLoading = false
                     return .merge(
-                        .cancel(id: StoryPlayerCancelID.contentCheck),
+                        .cancel(id: CancelID.contentCheck),
                         startTimer(&state)
                     )
                 }
@@ -224,8 +218,8 @@ struct StoryPlayerFeature: Reducer {
         state.shouldDismiss = true
         state.isTimerRunning = false
         return .merge(
-            .cancel(id: StoryPlayerCancelID.timer),
-            .cancel(id: StoryPlayerCancelID.contentCheck),
+            .cancel(id: CancelID.timer),
+            .cancel(id: CancelID.contentCheck),
             .run { _ in prefetchClient.cancelAll() },
             .send(.delegate(.dismissed))
         )
@@ -240,8 +234,8 @@ struct StoryPlayerFeature: Reducer {
         state.isLiked = persistenceClient.isLiked(state.currentStory.id)
 
         return .merge(
-            .cancel(id: StoryPlayerCancelID.timer),
-            .cancel(id: StoryPlayerCancelID.contentCheck),
+            .cancel(id: CancelID.timer),
+            .cancel(id: CancelID.contentCheck),
             startPlayback(&state),
             .run { _ in
                 switch haptic {
@@ -295,7 +289,7 @@ struct StoryPlayerFeature: Reducer {
                 await send(.timerTick(total))
             }
         }
-        .cancellable(id: StoryPlayerCancelID.timer, cancelInFlight: true)
+        .cancellable(id: CancelID.timer, cancelInFlight: true)
     }
 
     private func storyDuration(_ story: Story) -> Double {
@@ -314,7 +308,7 @@ struct StoryPlayerFeature: Reducer {
                 await send(.contentCheckTick)
             }
         }
-        .cancellable(id: StoryPlayerCancelID.contentCheck, cancelInFlight: true)
+        .cancellable(id: CancelID.contentCheck, cancelInFlight: true)
     }
 
     // MARK: - Seen/Liked
@@ -344,6 +338,6 @@ struct StoryPlayerFeature: Reducer {
         return .run { _ in
             await prefetchClient.prefetchStories(current, next)
         }
-        .cancellable(id: StoryPlayerCancelID.prefetch, cancelInFlight: true)
+        .cancellable(id: CancelID.prefetch, cancelInFlight: true)
     }
 }
