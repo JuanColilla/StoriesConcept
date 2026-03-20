@@ -74,9 +74,6 @@ struct StoryPlayerFeature {
     @Dependency(\.prefetchClient) var prefetchClient
     @Dependency(\.hapticClient) var hapticClient
 
-    @Shared(.inMemory("seenIds")) var seenIds: Set<String> = []
-    @Shared(.inMemory("likedIds")) var likedIds: Set<String> = []
-
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
@@ -120,8 +117,11 @@ struct StoryPlayerFeature {
                 state.isLiked.toggle()
                 let id = state.currentStory.id
                 let liked = state.isLiked
-                $likedIds.withLock {
-                    if liked { $0.insert(id) } else { $0.remove(id) }
+                do {
+                    @Shared(.inMemory("likedIds")) var likedIds: Set<String> = []
+                    $likedIds.withLock {
+                        if liked { $0.insert(id) } else { $0.remove(id) }
+                    }
                 }
                 return .run { _ in
                     hapticClient.liked()
@@ -321,6 +321,7 @@ struct StoryPlayerFeature {
 
     private func markSeenEffect(_ state: State) -> Effect<Action> {
         let storyId = state.currentStory.id
+        @Shared(.inMemory("seenIds")) var seenIds: Set<String> = []
         $seenIds.withLock { $0.insert(storyId) }
 
         return .merge(

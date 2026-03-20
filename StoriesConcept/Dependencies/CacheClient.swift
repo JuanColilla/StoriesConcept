@@ -2,11 +2,10 @@ import ComposableArchitecture
 import Foundation
 import os
 
-@DependencyClient
 struct CacheClient: Sendable {
     var save: @Sendable (_ data: Data, _ mediaId: String, _ ttl: TimeInterval) async -> Void
     var load: @Sendable (_ mediaId: String) async -> Data?
-    var isAvailable: @Sendable (_ mediaId: String) -> Bool = { _ in false }
+    var isAvailable: @Sendable (_ mediaId: String) -> Bool
     var clearAll: @Sendable () async -> Void
 }
 
@@ -33,6 +32,13 @@ extension CacheClient: DependencyKey {
             }
         )
     }()
+
+    static let testValue = CacheClient(
+        save: { _, _, _ in },
+        load: { _ in nil },
+        isAvailable: { _ in false },
+        clearAll: {}
+    )
 
     static let previewValue = CacheClient(
         save: { _, _, _ in },

@@ -23,6 +23,8 @@ extension NetworkClient: DependencyKey {
     }()
 
     static let previewValue = NetworkClient(
+        start: { },
+        stop: { },
         isConnected: { true },
         observeConnectivity: {
             AsyncStream { $0.yield(true) }
@@ -93,9 +95,10 @@ final class NetworkMonitorLive: @unchecked Sendable {
             continuation.yield(self.isConnected)
 
             continuation.onTermination = { [weak self] _ in
-                self?.lock.lock()
-                self?.continuations.removeValue(forKey: id)
-                self?.lock.unlock()
+                guard let self else { return }
+                self.lock.lock()
+                self.continuations.removeValue(forKey: id)
+                self.lock.unlock()
             }
         }
     }

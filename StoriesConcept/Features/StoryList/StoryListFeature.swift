@@ -59,9 +59,6 @@ struct StoryListFeature {
     @Dependency(\.prefetchClient) var prefetchClient
     @Dependency(\.networkClient) var networkClient
 
-    @Shared(.inMemory("seenIds")) var seenIds: Set<String> = []
-    @Shared(.inMemory("likedIds")) var likedIds: Set<String> = []
-
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
@@ -259,10 +256,12 @@ struct StoryListFeature {
             // MARK: - Caches
 
             case .seenCacheLoaded(let ids):
+                @Shared(.inMemory("seenIds")) var seenIds: Set<String> = []
                 $seenIds.withLock { $0 = ids }
                 return .none
 
             case .likedCacheLoaded(let ids):
+                @Shared(.inMemory("likedIds")) var likedIds: Set<String> = []
                 $likedIds.withLock { $0 = ids }
                 return .none
 
