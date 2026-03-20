@@ -7,9 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D9B1BC032F6D7A9B006B82F6 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = D9B1BC022F6D7A9B006B82F6 /* SnapshotTesting */; };
 		D9DE35602F6C3A6E00F144D0 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = D9DE355F2F6C3A6E00F144D0 /* ComposableArchitecture */; };
-		D9DE35702F6C3AE300F144D0 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = D9DE356F2F6C3AE300F144D0 /* SnapshotTesting */; };
-		D9DE35E72F6D255200F144D0 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = D9DE35E62F6D255200F144D0 /* ComposableArchitecture */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,8 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9DE35E72F6D255200F144D0 /* ComposableArchitecture in Frameworks */,
-				D9DE35702F6C3AE300F144D0 /* SnapshotTesting in Frameworks */,
+				D9B1BC032F6D7A9B006B82F6 /* SnapshotTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,8 +151,7 @@
 			);
 			name = StoriesConceptSnapshotTests;
 			packageProductDependencies = (
-				D9DE356F2F6C3AE300F144D0 /* SnapshotTesting */,
-				D9DE35E62F6D255200F144D0 /* ComposableArchitecture */,
+				D9B1BC022F6D7A9B006B82F6 /* SnapshotTesting */,
 			);
 			productName = StoriesConceptSnapshotTests;
 			productReference = D9DE35652F6C3AC200F144D0 /* StoriesConceptSnapshotTests.xctest */;
@@ -217,7 +214,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				D9DE355E2F6C3A6E00F144D0 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
-				D9DE356E2F6C3AE300F144D0 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
+				D9B1BC012F6D7A9B006B82F6 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D92F2BAA2F66581E002CA158 /* Products */;
@@ -640,6 +637,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		D9B1BC012F6D7A9B006B82F6 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.19.1;
+			};
+		};
 		D9DE355E2F6C3A6E00F144D0 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
@@ -648,28 +653,15 @@
 				minimumVersion = 1.25.2;
 			};
 		};
-		D9DE356E2F6C3AE300F144D0 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.19.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D9DE355F2F6C3A6E00F144D0 /* ComposableArchitecture */ = {
+		D9B1BC022F6D7A9B006B82F6 /* SnapshotTesting */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = D9DE355E2F6C3A6E00F144D0 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
-			productName = ComposableArchitecture;
-		};
-		D9DE356F2F6C3AE300F144D0 /* SnapshotTesting */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D9DE356E2F6C3AE300F144D0 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			package = D9B1BC012F6D7A9B006B82F6 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
 			productName = SnapshotTesting;
 		};
-		D9DE35E62F6D255200F144D0 /* ComposableArchitecture */ = {
+		D9DE355F2F6C3A6E00F144D0 /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D9DE355E2F6C3A6E00F144D0 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
