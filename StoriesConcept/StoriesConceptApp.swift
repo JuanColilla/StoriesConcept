@@ -1,53 +1,59 @@
-//
-//  StoriesConceptApp.swift
-//  StoriesConcept
-//
-//  Created by Juan Colilla on 15/3/26.
-//
-
+import ComposableArchitecture
+import os
 import SwiftUI
 import SwiftData
 
 @main
 struct StoriesConceptApp: App {
-    let container: ModelContainer
-    @State private var viewModel: StoryListViewModel?
+    let store: StoreOf<AppFeature>
 
     init() {
+        let container = Self.createContainer()
+
+        self.store = Store(initialState: AppFeature.State()) {
+            AppFeature()
+        } withDependencies: {
+            $0.persistenceClient = .live(container: container)
+        }
+    }
+
+    private static func createContainer() -> ModelContainer {
+        let schema = Schema([PersistedUser.self, StoryState.self])
+        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        destroyStoreIfNeeded(url: config.url)
+
         do {
-            let schema = Schema([PersistedUser.self, StoryState.self])
-            let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-            container = try ModelContainer(for: schema, configurations: [config])
+            return try ModelContainer(for: schema, configurations: [config])
         } catch {
             fatalError("Failed to create ModelContainer: \(error)")
         }
     }
 
+    /// Destroys the SwiftData store once after the TCA migration.
+    /// Uses the real URL from ModelConfiguration — no guessing.
+    private static func destroyStoreIfNeeded(url: URL?) {
+        let key = "didMigrateToTCA_v1"
+        guard !UserDefaults.standard.bool(forKey: key), let url else { return }
+
+        let fm = FileManager.default
+        for suffix in ["", "-shm", "-wal"] {
+            let file = URL(fileURLWithPath: url.path + suffix)
+            if fm.fileExists(atPath: file.path) {
+                try? fm.removeItem(at: file)
+                Logger.persist.info("Removed: \(file.lastPathComponent, privacy: .public)")
+            }
+        }
+
+        UserDefaults.standard.set(true, forKey: key)
+        Logger.persist.info("Migration complete: destroyed pre-TCA SwiftData store")
+    }
+
     var body: some Scene {
         WindowGroup {
-            if let viewModel {
-                StoryListView(viewModel: viewModel)
-            } else {
-                ProgressView()
-                    .task {
-                        let persistenceService = PersistenceService(container: container)
-                        let pexelsService = PexelsService()
-                        let cacheService = CacheService()
-                        let prefetchService = PrefetchService(
-                            pexelsService: pexelsService,
-                            cacheService: cacheService
-                        )
-                        let networkMonitor = NetworkMonitor()
-                        networkMonitor.start()
-                        viewModel = StoryListViewModel(
-                            pexelsService: pexelsService,
-                            cacheService: cacheService,
-                            persistenceService: persistenceService,
-                            prefetchService: prefetchService,
-                            networkMonitor: networkMonitor
-                        )
-                    }
-            }
+            StoryListView(
+                store: store.scope(state: \.storyList, action: \.storyList)
+            )
         }
     }
 }

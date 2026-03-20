@@ -1,55 +1,57 @@
+import ComposableArchitecture
+import os
+import Sharing
 import SwiftUI
 
 struct StoryPlayerView: View {
-    @State var viewModel: StoryPlayerViewModel
-    @Environment(\.dismiss) private var dismiss
+    @Bindable var store: StoreOf<StoryPlayerFeature>
     @GestureState private var isLongPressing = false
     /// Suppresses tap gestures briefly after a long press ends.
     /// Without this, the finger-up from a hold triggers onTapGesture.
     @State private var suppressTap = false
 
+    @SharedReader(.inMemory("seenIds")) var seenIds: Set<String> = []
+
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
 
-            if let story = viewModel.currentStory {
-                // Content layer
-                contentView(for: story)
-                    .ignoresSafeArea()
-
-                // Loading overlay
-                if viewModel.isLoading {
-                    Color.black.opacity(0.4)
-                        .ignoresSafeArea()
-                    ProgressView()
-                        .tint(.white)
-                        .scaleEffect(1.5)
-                }
-
-                // Tap zones (left = previous, right = next) — BELOW UI overlay
-                HStack(spacing: 0) {
-                    Color.clear
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            guard !suppressTap else { return }
-                            viewModel.previousStory()
-                        }
-
-                    Color.clear
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            guard !suppressTap else { return }
-                            viewModel.nextStory()
-                        }
-                }
+            // Content layer
+            contentView(for: store.currentStory)
                 .ignoresSafeArea()
 
-                // UI overlay — ON TOP of tap zones so buttons are tappable
-                VStack(spacing: 0) {
-                    topOverlay
-                    Spacer()
-                    bottomOverlay
-                }
+            // Loading overlay
+            if store.isContentLoading {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+                ProgressView()
+                    .tint(.white)
+                    .scaleEffect(1.5)
+            }
+
+            // Tap zones (left = previous, right = next) — BELOW UI overlay
+            HStack(spacing: 0) {
+                Color.clear
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        guard !suppressTap else { return }
+                        store.send(.tappedLeft)
+                    }
+
+                Color.clear
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        guard !suppressTap else { return }
+                        store.send(.tappedRight)
+                    }
+            }
+            .ignoresSafeArea()
+
+            // UI overlay — ON TOP of tap zones so buttons are tappable
+            VStack(spacing: 0) {
+                topOverlay
+                Spacer()
+                bottomOverlay
             }
         }
         .statusBarHidden()
@@ -57,9 +59,9 @@ struct StoryPlayerView: View {
         .gesture(longPressGesture)
         .onChange(of: isLongPressing) { _, pressing in
             if pressing {
-                viewModel.pauseTimer()
+                store.send(.longPressStarted)
             } else {
-                viewModel.resumeTimer()
+                store.send(.longPressEnded)
                 // Briefly suppress taps so the finger-up from the hold
                 // doesn't trigger onTapGesture (next/previous story).
                 suppressTap = true
@@ -68,20 +70,14 @@ struct StoryPlayerView: View {
                 }
             }
         }
-        .onChange(of: viewModel.shouldDismiss) { _, shouldDismiss in
-            if shouldDismiss { dismiss() }
-        }
         .onAppear {
-            viewModel.startTimer()
-        }
-        .onDisappear {
-            viewModel.stopTimer()
+            store.send(.onAppear)
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-            viewModel.pauseTimer()
+            store.send(.appBackgrounded)
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-            viewModel.resumeTimer()
+            store.send(.appForegrounded)
         }
     }
 
@@ -97,25 +93,12 @@ struct StoryPlayerView: View {
         Group {
             switch story.type {
             case .photo:
-                if let data = viewModel.imageData(for: story),
-                   let uiImage = downsampledImage(data: data) {
-                    Color.black
-                        .overlay {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .scaledToFill()
-                        }
-                        .clipped()
-                } else {
-                    Color.black
-                }
+                PhotoContentView(story: story)
             case .video:
                 VideoPlayerView(
                     url: story.mediaURL,
-                    isPaused: viewModel.isPaused,
-                    onBufferingChanged: { isBuffering in
-                        viewModel.isVideoBuffering = isBuffering
-                    }
+                    isPaused: store.isPaused,
+                    onBufferingChanged: nil
                 )
                 .ignoresSafeArea()
             }
@@ -129,43 +112,44 @@ struct StoryPlayerView: View {
         VStack(spacing: 8) {
             // Progress bar
             StoryProgressBar(
-                totalSegments: viewModel.totalStories,
-                activeIndex: viewModel.currentStoryIndex,
-                activeProgress: viewModel.progress,
-                isSeenAt: { viewModel.isStorySeen(at: $0) }
+                totalSegments: store.totalStories,
+                activeIndex: store.currentStoryIndex,
+                activeProgress: store.progress,
+                isSeenAt: { index in
+                    let story = store.currentUser.stories[index]
+                    return seenIds.contains(story.id)
+                }
             )
             .padding(.horizontal, 8)
             .padding(.top, 8)
 
             // User info + close
             HStack(spacing: 10) {
-                if let user = viewModel.currentUser {
-                    AsyncImage(url: user.avatarURL) { image in
-                        image.resizable().scaledToFill()
-                    } placeholder: {
-                        Circle().fill(Color.gray.opacity(0.5))
-                    }
-                    .frame(width: 36, height: 36)
-                    .clipShape(Circle())
+                let user = store.currentUser
 
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text(user.displayName)
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(.white)
+                AsyncImage(url: user.avatarURL) { image in
+                    image.resizable().scaledToFill()
+                } placeholder: {
+                    Circle().fill(Color.gray.opacity(0.5))
+                }
+                .frame(width: 36, height: 36)
+                .clipShape(Circle())
 
-                        if let story = viewModel.currentStory {
-                            Text(story.postedAt.timeAgoDisplay())
-                                .font(.caption2)
-                                .foregroundStyle(.white.opacity(0.7))
-                        }
-                    }
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(user.displayName)
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white)
+
+                    Text(store.currentStory.postedAt.timeAgoDisplay())
+                        .font(.caption2)
+                        .foregroundStyle(.white.opacity(0.7))
                 }
 
                 Spacer()
 
                 Button {
-                    viewModel.dismiss()
+                    store.send(.swipedDown)
                 } label: {
                     Image(systemName: "xmark")
                         .font(.title3)
@@ -193,11 +177,11 @@ struct StoryPlayerView: View {
             Spacer()
 
             Button {
-                viewModel.toggleLike()
+                store.send(.toggleLike)
             } label: {
-                Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
+                Image(systemName: store.isLiked ? "heart.fill" : "heart")
                     .font(.title2)
-                    .foregroundStyle(viewModel.isLiked ? .red : .white)
+                    .foregroundStyle(store.isLiked ? .red : .white)
                     .frame(width: 48, height: 48)
                     .background(Color.black.opacity(0.3))
                     .clipShape(Circle())
@@ -208,7 +192,7 @@ struct StoryPlayerView: View {
         }
     }
 
-    // MARK: - Gestures (separated for reliability)
+    // MARK: - Gestures
 
     private var dragGesture: some Gesture {
         DragGesture(minimumDistance: Constants.dragMinDistance)
@@ -217,12 +201,12 @@ struct StoryPlayerView: View {
                 let vertical = value.translation.height
 
                 if abs(vertical) > abs(horizontal) && vertical > 50 {
-                    viewModel.dismiss()
+                    store.send(.swipedDown)
                 } else if abs(horizontal) > abs(vertical) {
                     if horizontal < -50 {
-                        viewModel.nextUser()
+                        store.send(.swipedToNextUser)
                     } else if horizontal > 50 {
-                        viewModel.previousUser()
+                        store.send(.swipedToPreviousUser)
                     }
                 }
             }
@@ -245,12 +229,50 @@ struct StoryPlayerView: View {
                 }
             }
     }
+}
 
-    // MARK: - Image Processing
+// MARK: - Photo Content View
 
-    private func downsampledImage(data: Data) -> UIImage? {
+private struct PhotoContentView: View {
+    let story: Story
+    @State private var imageData: Data?
+    @Dependency(\.cacheClient) var cacheClient
+
+    var body: some View {
+        Group {
+            if let data = imageData,
+               let uiImage = Self.downsampledImage(data: data) {
+                Color.black
+                    .overlay {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFill()
+                    }
+                    .clipped()
+            } else {
+                Color.black
+            }
+        }
+        .task {
+            // Try cache first
+            if let cached = await cacheClient.load(story.cacheKey) {
+                imageData = cached
+                return
+            }
+            // Fallback: download directly if prefetch hasn't cached it yet
+            do {
+                let (data, _) = try await URLSession.shared.data(from: story.mediaURL)
+                await cacheClient.save(data, story.cacheKey, Constants.cacheTTL)
+                imageData = data
+            } catch {
+                Logger.cache.error("PhotoContentView download failed: \(error, privacy: .public)")
+            }
+        }
+    }
+
+    private static func downsampledImage(data: Data) -> UIImage? {
         let screenScale = UITraitCollection.current.displayScale
-        let maxPixelSize = 2560.0 * max(screenScale, 2.0) // Safe upper bound for any device
+        let maxPixelSize = 2560.0 * max(screenScale, 2.0)
         let options: [CFString: Any] = [
             kCGImageSourceCreateThumbnailFromImageAlways: true,
             kCGImageSourceCreateThumbnailWithTransform: true,

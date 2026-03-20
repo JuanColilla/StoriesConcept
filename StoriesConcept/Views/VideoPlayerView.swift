@@ -68,9 +68,10 @@ struct VideoPlayerView: UIViewControllerRepresentable {
             onBufferingChanged?(true)
 
             observation = player.observe(\.timeControlStatus, options: [.new]) { [weak self] player, _ in
+                let callback = self?.onBufferingChanged
                 Task { @MainActor in
                     let isBuffering = player.timeControlStatus != .playing
-                    self?.onBufferingChanged?(isBuffering)
+                    callback?(isBuffering)
                 }
             }
         }

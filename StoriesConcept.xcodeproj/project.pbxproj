@@ -6,8 +6,32 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D9B1BC032F6D7A9B006B82F6 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = D9B1BC022F6D7A9B006B82F6 /* SnapshotTesting */; };
+		D9DE35602F6C3A6E00F144D0 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = D9DE355F2F6C3A6E00F144D0 /* ComposableArchitecture */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D9DE35692F6C3AC200F144D0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D92F2BA12F66581E002CA158 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D92F2BA82F66581E002CA158;
+			remoteInfo = StoriesConcept;
+		};
+		D9DE35D52F6D24A000F144D0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D92F2BA12F66581E002CA158 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D92F2BA82F66581E002CA158;
+			remoteInfo = StoriesConcept;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		D92F2BA92F66581E002CA158 /* StoriesConcept.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StoriesConcept.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9DE35652F6C3AC200F144D0 /* StoriesConceptSnapshotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StoriesConceptSnapshotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9DE35D12F6D24A000F144D0 /* StoriesConceptTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StoriesConceptTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -16,10 +40,36 @@
 			path = StoriesConcept;
 			sourceTree = "<group>";
 		};
+		D9DE35662F6C3AC200F144D0 /* StoriesConceptSnapshotTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = StoriesConceptSnapshotTests;
+			sourceTree = "<group>";
+		};
+		D9DE35D22F6D24A000F144D0 /* StoriesConceptTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = StoriesConceptTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		D92F2BA62F66581E002CA158 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D9DE35602F6C3A6E00F144D0 /* ComposableArchitecture in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D9DE35622F6C3AC200F144D0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D9B1BC032F6D7A9B006B82F6 /* SnapshotTesting in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D9DE35CE2F6D24A000F144D0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,6 +83,9 @@
 			isa = PBXGroup;
 			children = (
 				D92F2BAB2F66581E002CA158 /* StoriesConcept */,
+				D9DE35662F6C3AC200F144D0 /* StoriesConceptSnapshotTests */,
+				D9DE35D22F6D24A000F144D0 /* StoriesConceptTests */,
+				D9DE35E32F6D254C00F144D0 /* Frameworks */,
 				D92F2BAA2F66581E002CA158 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,8 +94,17 @@
 			isa = PBXGroup;
 			children = (
 				D92F2BA92F66581E002CA158 /* StoriesConcept.app */,
+				D9DE35652F6C3AC200F144D0 /* StoriesConceptSnapshotTests.xctest */,
+				D9DE35D12F6D24A000F144D0 /* StoriesConceptTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D9DE35E32F6D254C00F144D0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -65,10 +127,58 @@
 			);
 			name = StoriesConcept;
 			packageProductDependencies = (
+				D9DE355F2F6C3A6E00F144D0 /* ComposableArchitecture */,
 			);
 			productName = StoriesConcept;
 			productReference = D92F2BA92F66581E002CA158 /* StoriesConcept.app */;
 			productType = "com.apple.product-type.application";
+		};
+		D9DE35642F6C3AC200F144D0 /* StoriesConceptSnapshotTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D9DE356B2F6C3AC200F144D0 /* Build configuration list for PBXNativeTarget "StoriesConceptSnapshotTests" */;
+			buildPhases = (
+				D9DE35612F6C3AC200F144D0 /* Sources */,
+				D9DE35622F6C3AC200F144D0 /* Frameworks */,
+				D9DE35632F6C3AC200F144D0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D9DE356A2F6C3AC200F144D0 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				D9DE35662F6C3AC200F144D0 /* StoriesConceptSnapshotTests */,
+			);
+			name = StoriesConceptSnapshotTests;
+			packageProductDependencies = (
+				D9B1BC022F6D7A9B006B82F6 /* SnapshotTesting */,
+			);
+			productName = StoriesConceptSnapshotTests;
+			productReference = D9DE35652F6C3AC200F144D0 /* StoriesConceptSnapshotTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D9DE35D02F6D24A000F144D0 /* StoriesConceptTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D9DE35D72F6D24A000F144D0 /* Build configuration list for PBXNativeTarget "StoriesConceptTests" */;
+			buildPhases = (
+				D9DE35CD2F6D24A000F144D0 /* Sources */,
+				D9DE35CE2F6D24A000F144D0 /* Frameworks */,
+				D9DE35CF2F6D24A000F144D0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D9DE35D62F6D24A000F144D0 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				D9DE35D22F6D24A000F144D0 /* StoriesConceptTests */,
+			);
+			name = StoriesConceptTests;
+			packageProductDependencies = (
+			);
+			productName = StoriesConceptTests;
+			productReference = D9DE35D12F6D24A000F144D0 /* StoriesConceptTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -83,6 +193,14 @@
 					D92F2BA82F66581E002CA158 = {
 						CreatedOnToolsVersion = 26.3;
 					};
+					D9DE35642F6C3AC200F144D0 = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = D92F2BA82F66581E002CA158;
+					};
+					D9DE35D02F6D24A000F144D0 = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = D92F2BA82F66581E002CA158;
+					};
 				};
 			};
 			buildConfigurationList = D92F2BA42F66581E002CA158 /* Build configuration list for PBXProject "StoriesConcept" */;
@@ -94,18 +212,38 @@
 			);
 			mainGroup = D92F2BA02F66581E002CA158;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				D9DE355E2F6C3A6E00F144D0 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				D9B1BC012F6D7A9B006B82F6 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D92F2BAA2F66581E002CA158 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				D92F2BA82F66581E002CA158 /* StoriesConcept */,
+				D9DE35642F6C3AC200F144D0 /* StoriesConceptSnapshotTests */,
+				D9DE35D02F6D24A000F144D0 /* StoriesConceptTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		D92F2BA72F66581E002CA158 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D9DE35632F6C3AC200F144D0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D9DE35CF2F6D24A000F144D0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +260,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D9DE35612F6C3AC200F144D0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D9DE35CD2F6D24A000F144D0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D9DE356A2F6C3AC200F144D0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D92F2BA82F66581E002CA158 /* StoriesConcept */;
+			targetProxy = D9DE35692F6C3AC200F144D0 /* PBXContainerItemProxy */;
+		};
+		D9DE35D62F6D24A000F144D0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D92F2BA82F66581E002CA158 /* StoriesConcept */;
+			targetProxy = D9DE35D52F6D24A000F144D0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		D92F2BB42F66581F002CA158 /* Debug */ = {
@@ -256,11 +421,14 @@
 				DEVELOPMENT_TEAM = 3KF59NP775;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Moments;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -269,12 +437,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.JuanColilla.StoriesConcept;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -288,11 +460,14 @@
 				DEVELOPMENT_TEAM = 3KF59NP775;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Moments;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -301,12 +476,122 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.JuanColilla.StoriesConcept;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		D9DE356C2F6C3AC200F144D0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3KF59NP775;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.JuanColilla.StoriesConceptSnapshotTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StoriesConcept.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/StoriesConcept";
+			};
+			name = Debug;
+		};
+		D9DE356D2F6C3AC200F144D0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3KF59NP775;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.JuanColilla.StoriesConceptSnapshotTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StoriesConcept.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/StoriesConcept";
+			};
+			name = Release;
+		};
+		D9DE35D82F6D24A000F144D0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3KF59NP775;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.JuanColilla.StoriesConceptTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StoriesConcept.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/StoriesConcept";
+			};
+			name = Debug;
+		};
+		D9DE35D92F6D24A000F144D0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3KF59NP775;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.JuanColilla.StoriesConceptTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StoriesConcept.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/StoriesConcept";
 			};
 			name = Release;
 		};
@@ -331,7 +616,57 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		D9DE356B2F6C3AC200F144D0 /* Build configuration list for PBXNativeTarget "StoriesConceptSnapshotTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D9DE356C2F6C3AC200F144D0 /* Debug */,
+				D9DE356D2F6C3AC200F144D0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D9DE35D72F6D24A000F144D0 /* Build configuration list for PBXNativeTarget "StoriesConceptTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D9DE35D82F6D24A000F144D0 /* Debug */,
+				D9DE35D92F6D24A000F144D0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D9B1BC012F6D7A9B006B82F6 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.19.1;
+			};
+		};
+		D9DE355E2F6C3A6E00F144D0 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.25.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D9B1BC022F6D7A9B006B82F6 /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D9B1BC012F6D7A9B006B82F6 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
+		};
+		D9DE355F2F6C3A6E00F144D0 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D9DE355E2F6C3A6E00F144D0 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D92F2BA12F66581E002CA158 /* Project object */;
 }

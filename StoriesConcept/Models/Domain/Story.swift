@@ -1,6 +1,6 @@
 import Foundation
 
-struct Story: Identifiable, Sendable {
+struct Story: Identifiable, Sendable, Equatable {
     /// Composite ID: "\(userId)_\(mediaId)_\(blockIndex)"
     let id: String
     /// Pexels media ID — used as cache key, shared across users for same content
