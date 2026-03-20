@@ -20,7 +20,6 @@ struct StoryPlayerFeature {
 
         // Interaction
         var isLiked = false
-        var shouldDismiss = false
 
         // Computed
         var currentUser: User { allUsers[currentUserIndex] }
@@ -50,7 +49,6 @@ struct StoryPlayerFeature {
 
         // Lifecycle
         case onAppear
-        case onDisappear
         case appBackgrounded
         case appForegrounded
 
@@ -59,11 +57,11 @@ struct StoryPlayerFeature {
 
         enum Delegate {
             case storySeen(String)
-            case dismissed
         }
     }
 
     @Dependency(\.continuousClock) var clock
+    @Dependency(\.dismiss) var dismiss
     @Dependency(\.cacheClient) var cacheClient
     @Dependency(\.persistenceClient) var persistenceClient
     @Dependency(\.prefetchClient) var prefetchClient
@@ -76,7 +74,8 @@ struct StoryPlayerFeature {
             // MARK: - Navigation
 
             case .tappedRight:
-                return advanceStory(&state)
+                let seenEffect = markSeenEffect(state)
+                return .merge(seenEffect, advanceStory(&state))
 
             case .tappedLeft:
                 return retreatStory(&state)
@@ -88,7 +87,7 @@ struct StoryPlayerFeature {
                 return retreatUser(&state)
 
             case .swipedDown:
-                return dismiss(&state)
+                return dismissPlayer(&state)
 
             // MARK: - Timer
 
@@ -143,14 +142,6 @@ struct StoryPlayerFeature {
                 guard !state.isPaused else { return .none }
                 return startTimer(&state)
 
-            case .onDisappear:
-                state.isTimerRunning = false
-                return .merge(
-                    .cancel(id: CancelID.timer),
-                    .cancel(id: CancelID.contentCheck),
-                    .cancel(id: CancelID.prefetch)
-                )
-
             // MARK: - Content loading
 
             case .contentCheckTick:
@@ -202,7 +193,7 @@ struct StoryPlayerFeature {
             state.currentStoryIndex = Self.firstUnseen(storyIds: storyIds, seenIds: seenIds)
             return .merge(seenEffect, onStoryChanged(&state, haptic: .user))
         } else {
-            return .merge(seenEffect, dismiss(&state))
+            return .merge(seenEffect, dismissPlayer(&state))
         }
     }
 
@@ -215,14 +206,13 @@ struct StoryPlayerFeature {
         return .none
     }
 
-    private func dismiss(_ state: inout State) -> Effect<Action> {
-        state.shouldDismiss = true
+    private func dismissPlayer(_ state: inout State) -> Effect<Action> {
         state.isTimerRunning = false
         return .merge(
             .cancel(id: CancelID.timer),
             .cancel(id: CancelID.contentCheck),
             .run { _ in prefetchClient.cancelAll() },
-            .send(.delegate(.dismissed))
+            .run { _ in await dismiss() }
         )
     }
 

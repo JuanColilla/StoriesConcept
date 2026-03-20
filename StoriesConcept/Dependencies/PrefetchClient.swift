@@ -57,13 +57,14 @@ private actor PrefetchActor {
             guard activeTasks[taskKey] == nil else { continue }
 
             let url = firstStory.mediaURL
-            activeTasks[taskKey] = Task.detached(priority: .background) { [cacheClient, pexelsClient] in
+            activeTasks[taskKey] = Task.detached(priority: .background) { [weak self, cacheClient, pexelsClient] in
                 do {
                     let data = try await pexelsClient.downloadData(url)
                     await cacheClient.save(data, cacheKey, Constants.cacheTTL)
                 } catch {
                     // Silent failure
                 }
+                await self?.removeTask(key: taskKey)
             }
         }
     }
@@ -90,14 +91,19 @@ private actor PrefetchActor {
             guard activeTasks[taskKey] == nil else { continue }
 
             let url = story.mediaURL
-            activeTasks[taskKey] = Task.detached(priority: priority) { [cacheClient, pexelsClient] in
+            activeTasks[taskKey] = Task.detached(priority: priority) { [weak self, cacheClient, pexelsClient] in
                 do {
                     let data = try await pexelsClient.downloadData(url)
                     await cacheClient.save(data, cacheKey, Constants.cacheTTL)
                 } catch {
                     // Silent failure
                 }
+                await self?.removeTask(key: taskKey)
             }
         }
+    }
+
+    private func removeTask(key: String) {
+        activeTasks.removeValue(forKey: key)
     }
 }

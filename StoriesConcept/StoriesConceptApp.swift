@@ -34,8 +34,6 @@ struct StoriesConceptApp: App {
     /// Uses the real URL from ModelConfiguration — no guessing.
     private static func destroyStoreIfNeeded(url: URL?) {
         let key = "didMigrateToTCA_v1"
-        // TODO: Remove after first successful migration test
-        UserDefaults.standard.removeObject(forKey: key)
         guard !UserDefaults.standard.bool(forKey: key), let url else { return }
 
         let fm = FileManager.default

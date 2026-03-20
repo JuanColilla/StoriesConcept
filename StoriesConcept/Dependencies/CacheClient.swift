@@ -65,8 +65,8 @@ private final class CacheStorage: @unchecked Sendable {
     }()
 
     init() {
-        memoryCache.countLimit = 50
-        memoryCache.totalCostLimit = 100 * 1024 * 1024
+        memoryCache.countLimit = 20
+        memoryCache.totalCostLimit = 30 * 1024 * 1024 // 30 MB
         loadMetadata()
     }
 

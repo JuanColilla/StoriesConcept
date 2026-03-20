@@ -1,10 +1,10 @@
 import ComposableArchitecture
+import os
 import Sharing
 import SwiftUI
 
 struct StoryPlayerView: View {
     @Bindable var store: StoreOf<StoryPlayerFeature>
-    @Environment(\.dismiss) private var dismiss
     @GestureState private var isLongPressing = false
     /// Suppresses tap gestures briefly after a long press ends.
     /// Without this, the finger-up from a hold triggers onTapGesture.
@@ -70,14 +70,8 @@ struct StoryPlayerView: View {
                 }
             }
         }
-        .onChange(of: store.shouldDismiss) { _, shouldDismiss in
-            if shouldDismiss { dismiss() }
-        }
         .onAppear {
             store.send(.onAppear)
-        }
-        .onDisappear {
-            store.send(.onDisappear)
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
             store.send(.appBackgrounded)
@@ -260,7 +254,19 @@ private struct PhotoContentView: View {
             }
         }
         .task {
-            imageData = await cacheClient.load(story.cacheKey)
+            // Try cache first
+            if let cached = await cacheClient.load(story.cacheKey) {
+                imageData = cached
+                return
+            }
+            // Fallback: download directly if prefetch hasn't cached it yet
+            do {
+                let (data, _) = try await URLSession.shared.data(from: story.mediaURL)
+                await cacheClient.save(data, story.cacheKey, Constants.cacheTTL)
+                imageData = data
+            } catch {
+                Logger.cache.error("PhotoContentView download failed: \(error, privacy: .public)")
+            }
         }
     }
 

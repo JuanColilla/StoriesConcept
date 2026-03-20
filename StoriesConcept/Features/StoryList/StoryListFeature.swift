@@ -27,6 +27,9 @@ struct StoryListFeature {
         var videoPool: [PexelsVideo] = []
         var avatarPool: [PexelsPhoto] = []
 
+        // Track all generated user IDs to prevent duplicates across blocks
+        var generatedUserIds: Set<String> = []
+
         // Navigation — modal player
         @Presents var player: StoryPlayerFeature.State?
     }
@@ -74,10 +77,23 @@ struct StoryListFeature {
 
             case .persistedUsersLoaded(let persisted):
                 if !persisted.isEmpty {
-                    state.users = persisted.map { UserGenerator.toDomainUser($0) }
-                    state.currentBlockIndex = persisted.map(\.blockIndex).max() ?? -1
+                    // Keep only the last 3 blocks to prevent unbounded growth
+                    let maxBlock = persisted.map(\.blockIndex).max() ?? 0
+                    let minBlock = max(0, maxBlock - 2)
+                    let recent = persisted.filter { $0.blockIndex >= minBlock }
+                    state.users = recent.map { UserGenerator.toDomainUser($0) }
+                    state.generatedUserIds = Set(recent.map(\.id))
+                    state.currentBlockIndex = maxBlock
                     state.isLoading = false
-                    Logger.list.info("Loaded \(persisted.count, privacy: .public) persisted users")
+                    Logger.list.info("Loaded \(recent.count, privacy: .public) of \(persisted.count, privacy: .public) persisted users (blocks \(minBlock, privacy: .public)-\(maxBlock, privacy: .public))")
+                    // Clean up old blocks in background
+                    if recent.count < persisted.count {
+                        return .run { _ in
+                            try? await persistenceClient.deleteAllUsers()
+                            nonisolated(unsafe) let toSave = recent
+                            try? await persistenceClient.saveUsers(toSave)
+                        }
+                    }
                     return .none
                 }
                 // No persisted users — fetch from API
@@ -92,9 +108,11 @@ struct StoryListFeature {
                     blockIndex: 0,
                     photos: state.photoPool,
                     videos: state.videoPool,
-                    avatars: state.avatarPool
+                    avatars: state.avatarPool,
+                    existingUserIds: state.generatedUserIds
                 )
                 state.users = result.users
+                state.generatedUserIds.formUnion(result.users.map(\.id))
                 state.currentBlockIndex = 0
                 Logger.list.info("Generated block 0: \(result.users.count, privacy: .public) users")
                 return .run { _ in
@@ -137,10 +155,12 @@ struct StoryListFeature {
                     let photos = state.photoPool
                     let videos = state.videoPool
                     let avatars = state.avatarPool
+                    let existingIds = state.generatedUserIds
                     return .run { send in
                         let result = UserGenerator.generate(
                             blockIndex: nextBlock,
-                            photos: photos, videos: videos, avatars: avatars
+                            photos: photos, videos: videos, avatars: avatars,
+                            existingUserIds: existingIds
                         )
                         await send(.blockGenerated(
                             users: result.users,
@@ -159,9 +179,11 @@ struct StoryListFeature {
                     blockIndex: nextBlock,
                     photos: state.photoPool,
                     videos: state.videoPool,
-                    avatars: state.avatarPool
+                    avatars: state.avatarPool,
+                    existingUserIds: state.generatedUserIds
                 )
                 state.users.append(contentsOf: result.users)
+                state.generatedUserIds.formUnion(result.users.map(\.id))
                 state.currentBlockIndex = nextBlock
                 let blockIndex = state.currentBlockIndex
                 return .run { _ in
@@ -176,6 +198,7 @@ struct StoryListFeature {
 
             case .blockGenerated(let users, let persisted, let blockIndex):
                 state.users.append(contentsOf: users)
+                state.generatedUserIds.formUnion(users.map(\.id))
                 state.currentBlockIndex = blockIndex
                 nonisolated(unsafe) let toSave = persisted
                 return .run { _ in
@@ -209,10 +232,12 @@ struct StoryListFeature {
                     blockIndex: nextBlock,
                     photos: state.photoPool,
                     videos: state.videoPool,
-                    avatars: state.avatarPool
+                    avatars: state.avatarPool,
+                    existingUserIds: state.generatedUserIds
                 )
                 // Prepend new users at top
                 state.users.insert(contentsOf: result.users, at: 0)
+                state.generatedUserIds.formUnion(result.users.map(\.id))
                 state.currentBlockIndex = nextBlock
                 return .run { _ in
                     try await persistenceClient.saveUsers(result.persisted)
@@ -245,10 +270,6 @@ struct StoryListFeature {
 
             case .player(.presented(.delegate(.storySeen(let id)))):
                 Logger.list.info("Story seen: \(id, privacy: .public)")
-                return .none
-
-            case .player(.presented(.delegate(.dismissed))):
-                state.player = nil
                 return .none
 
             case .player:

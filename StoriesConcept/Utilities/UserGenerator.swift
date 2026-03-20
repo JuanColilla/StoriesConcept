@@ -7,9 +7,10 @@ enum UserGenerator {
         blockIndex: Int,
         photos: [PexelsPhoto],
         videos: [PexelsVideo],
-        avatars: [PexelsPhoto]
+        avatars: [PexelsPhoto],
+        existingUserIds: Set<String> = []
     ) -> (users: [User], persisted: [PersistedUser]) {
-        var usedNames: Set<String> = []
+        var usedNames = existingUserIds
         var newUsers: [User] = []
         var persistedUsers: [PersistedUser] = []
 

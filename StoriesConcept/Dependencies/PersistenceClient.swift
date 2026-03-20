@@ -10,6 +10,7 @@ struct PersistenceClient: Sendable {
     var saveUsers: @Sendable (_ users: [PersistedUser]) async throws -> Void
     var fetchAllUsers: @Sendable () async throws -> [PersistedUser]
     var fetchUsers: @Sendable (_ blockIndex: Int) async throws -> [PersistedUser]
+    var deleteAllUsers: @Sendable () async throws -> Void
     var maxBlockIndex: @Sendable () async -> Int
     // Story states
     var markSeen: @Sendable (_ storyId: String) async throws -> Void
@@ -48,6 +49,12 @@ actor PersistenceStorage {
         let descriptor = FetchDescriptor<PersistedUser>()
         let all = (try? modelContext.fetch(descriptor)) ?? []
         return all.filter { $0.blockIndex == blockIndex }
+    }
+
+    func deleteAllUsers() throws {
+        try modelContext.delete(model: PersistedUser.self)
+        try modelContext.save()
+        Logger.persist.info("Deleted all persisted users")
     }
 
     func maxBlockIndex() -> Int {
@@ -148,6 +155,7 @@ extension PersistenceClient: DependencyKey {
             saveUsers: { users in try await storage.saveUsers(users) },
             fetchAllUsers: { await storage.fetchAllUsers() },
             fetchUsers: { blockIndex in await storage.fetchUsers(blockIndex: blockIndex) },
+            deleteAllUsers: { try await storage.deleteAllUsers() },
             maxBlockIndex: { await storage.maxBlockIndex() },
             markSeen: { storyId in try await storage.markSeen(storyId: storyId) },
             setLiked: { storyId, liked in try await storage.setLiked(storyId: storyId, liked: liked) },
@@ -169,6 +177,7 @@ extension PersistenceClient: DependencyKey {
         saveUsers: { _ in },
         fetchAllUsers: { [] },
         fetchUsers: { _ in [] },
+        deleteAllUsers: { },
         maxBlockIndex: { -1 },
         markSeen: { _ in },
         setLiked: { _, _ in },
@@ -185,6 +194,7 @@ extension PersistenceClient: DependencyKey {
         saveUsers: { _ in },
         fetchAllUsers: { [] },
         fetchUsers: { _ in [] },
+        deleteAllUsers: { },
         maxBlockIndex: { -1 },
         markSeen: { _ in },
         setLiked: { _, _ in },
