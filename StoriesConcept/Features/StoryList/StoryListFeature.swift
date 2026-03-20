@@ -231,7 +231,8 @@ struct StoryListFeature {
             case .userTapped(let index):
                 let user = state.users[index]
                 let storyIds = user.stories.map(\.id)
-                let firstUnseen = persistenceClient.firstUnseenIndex(storyIds)
+                @Shared(.inMemory("seenIds")) var seenIds: Set<String> = []
+                let firstUnseen = Self.firstUnseen(storyIds: storyIds, seenIds: seenIds)
                 state.player = StoryPlayerFeature.State(
                     allUsers: state.users,
                     currentUserIndex: index,
@@ -308,5 +309,12 @@ struct StoryListFeature {
             let liked = try await persistenceClient.loadLikedCache()
             await send(.likedCacheLoaded(liked))
         }
+    }
+
+    static func firstUnseen(storyIds: [String], seenIds: Set<String>) -> Int {
+        for (index, id) in storyIds.enumerated() {
+            if !seenIds.contains(id) { return index }
+        }
+        return 0
     }
 }

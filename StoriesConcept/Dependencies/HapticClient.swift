@@ -3,20 +3,20 @@ import UIKit
 
 @DependencyClient
 struct HapticClient: Sendable {
-    var storyChanged: @Sendable () -> Void = { }
-    var userChanged: @Sendable () -> Void = { }
-    var liked: @Sendable () -> Void = { }
+    var storyChanged: @Sendable () async -> Void
+    var userChanged: @Sendable () async -> Void
+    var liked: @Sendable () async -> Void
 }
 
 extension HapticClient: DependencyKey {
     static let liveValue = HapticClient(
-        storyChanged: {
+        storyChanged: { @MainActor in
             UIImpactFeedbackGenerator(style: .light).impactOccurred()
         },
-        userChanged: {
+        userChanged: { @MainActor in
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         },
-        liked: {
+        liked: { @MainActor in
             UINotificationFeedbackGenerator().notificationOccurred(.success)
         }
     )

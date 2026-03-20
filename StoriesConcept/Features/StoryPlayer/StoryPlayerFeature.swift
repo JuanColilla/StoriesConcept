@@ -119,7 +119,7 @@ struct StoryPlayerFeature {
                     }
                 }
                 return .run { _ in
-                    hapticClient.liked()
+                    await hapticClient.liked()
                     try await persistenceClient.setLiked(id, liked)
                 }
 
@@ -198,7 +198,8 @@ struct StoryPlayerFeature {
             state.currentUserIndex += 1
             let user = state.currentUser
             let storyIds = user.stories.map(\.id)
-            state.currentStoryIndex = persistenceClient.firstUnseenIndex(storyIds)
+            @Shared(.inMemory("seenIds")) var seenIds: Set<String> = []
+            state.currentStoryIndex = Self.firstUnseen(storyIds: storyIds, seenIds: seenIds)
             return .merge(seenEffect, onStoryChanged(&state, haptic: .user))
         } else {
             return .merge(seenEffect, dismiss(&state))
@@ -231,7 +232,10 @@ struct StoryPlayerFeature {
 
     private func onStoryChanged(_ state: inout State, haptic: HapticType) -> Effect<Action> {
         state.progress = 0
-        state.isLiked = persistenceClient.isLiked(state.currentStory.id)
+        do {
+            @Shared(.inMemory("likedIds")) var likedIds: Set<String> = []
+            state.isLiked = likedIds.contains(state.currentStory.id)
+        }
 
         return .merge(
             .cancel(id: CancelID.timer),
@@ -239,8 +243,8 @@ struct StoryPlayerFeature {
             startPlayback(&state),
             .run { _ in
                 switch haptic {
-                case .story: hapticClient.storyChanged()
-                case .user: hapticClient.userChanged()
+                case .story: await hapticClient.storyChanged()
+                case .user: await hapticClient.userChanged()
                 }
             },
             requestPrefetch(state)
@@ -251,7 +255,10 @@ struct StoryPlayerFeature {
 
     private func startPlayback(_ state: inout State) -> Effect<Action> {
         let story = state.currentStory
-        state.isLiked = persistenceClient.isLiked(story.id)
+        do {
+            @Shared(.inMemory("likedIds")) var likedIds: Set<String> = []
+            state.isLiked = likedIds.contains(story.id)
+        }
 
         // Videos always stream, photos need cache check
         if story.type == .photo && !cacheClient.isAvailable(story.cacheKey) {
@@ -339,5 +346,14 @@ struct StoryPlayerFeature {
             await prefetchClient.prefetchStories(current, next)
         }
         .cancellable(id: CancelID.prefetch, cancelInFlight: true)
+    }
+
+    // MARK: - Helpers
+
+    static func firstUnseen(storyIds: [String], seenIds: Set<String>) -> Int {
+        for (index, id) in storyIds.enumerated() {
+            if !seenIds.contains(id) { return index }
+        }
+        return 0
     }
 }
