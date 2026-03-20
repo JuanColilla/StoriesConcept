@@ -156,7 +156,7 @@ extension PersistenceClient: DependencyKey {
         let storage = PersistenceStorage(container: container)
 
         return PersistenceClient(
-            saveUsers: { users in await storage.saveUsers(users) },
+            saveUsers: { users in try await storage.saveUsers(users) },
             fetchAllUsers: { await storage.fetchAllUsers() },
             fetchUsers: { blockIndex in await storage.fetchUsers(blockIndex: blockIndex) },
             maxBlockIndex: { await storage.maxBlockIndex() },
